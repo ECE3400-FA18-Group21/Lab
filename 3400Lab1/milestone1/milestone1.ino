@@ -8,9 +8,13 @@
 Servo servo_R;
 Servo servo_L;
 
-//enum State = {DRIVE, TURN_PREPARE, TURN_RIGHT, TURN_LEFT};
-
-//State currentState;
+/*
+ * A figure 8 formation on the grid requires 8 turns.
+ * Assuming the robot starts in the middle, it will take
+ * 4 left turns followed by 4 right turns. This count
+ * variable keeps track of what turn the robot is on.
+ */
+int turnCount = 0;
 
 
 /*
@@ -48,20 +52,27 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  //Line tracking code
   int * sensorStatus = checkSensors();
-  if (sensorStatus[0] == 0) //turn Right
+  if (sensorStatus[0] == 0 && sensorStatus[1] == 0 && sensorStatus[2] == 0){
+    //All three sensors read white- we're at an intersection
+    if(turnCount < 4){
+      turnLeftIntersection(servo_L, servo_R);
+    }else{
+      turnRightIntersection(servo_L, servo_R);
+    }
+    if(turnCount == 7)
+      turnCount = 0; //Reset count at 7
+    else
+      turnCount++;
+  }
+  // Else just track the line
+  else if (sensorStatus[0] == 0) //turn Right
     adjustRight(servo_L, servo_R, 85);
   else if (sensorStatus[2] == 0) //turn Left
     adjustLeft(servo_L, servo_R, 85);
   else
     moveForward(servo_L, servo_R);
-
-
-  /*unsigned int * sensorReadings = checkSensors();
-    for(int i = 0; i < NUM_SENSORS; i++){
-    Serial.print(sensorReadings[i]);
-    Serial.print("\t");
-    }
-    Serial.println("");*/
 
 }

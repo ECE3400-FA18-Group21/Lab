@@ -50,7 +50,7 @@ void adjustLeft(Servo servo_L, Servo servo_R, int amount);
 
 /*
  * [turnRight] and [turnLeft] are functions that
- * turn the robot 90 degrees at an intersection. [turnRight]
+ * turn the robot 90 degrees in place. [turnRight]
  * turns right by 90 degrees, adn [turnLeft] turns the robot
  * left by 90 degrees.
  * 
@@ -61,3 +61,20 @@ void adjustLeft(Servo servo_L, Servo servo_R, int amount);
 void turnRight(Servo servo_L, Servo servo_R);
 
 void turnLeft(Servo servo_L, Servo servo_R);
+
+/* =========== ADVANCED FUNCTIONS =========== */
+
+
+/*
+ * [turnRightIntersection] and [turnLeftIntersection] are functions that
+ * turn the robot 90 degrees at an intersection. The robot must first
+ * move forward slightly before performing an in place turn. These functions
+ * consolidate both motions together.
+ * 
+ * args: [servo_L] is the Servo object for the left motor,
+ *       [servo_R] is the Servo object for the right motor
+ */
+
+void turnRightIntersection(Servo servo_L, Servo servo_R);
+
+void turnLeftIntersection(Servo servo_L, Servo servo_R);
