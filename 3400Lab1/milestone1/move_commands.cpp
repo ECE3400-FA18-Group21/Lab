@@ -33,7 +33,7 @@ void adjustLeft(Servo servo_L, Servo servo_R, int amount){
 void turnRight(Servo servo_L, Servo servo_R){
   servo_R.write(180);
   servo_L.write(180);
-  delay(530);
+  delay(550);
   stopMotors(servo_L, servo_R);
 }
 
