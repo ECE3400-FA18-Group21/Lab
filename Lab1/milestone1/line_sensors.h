@@ -1,8 +1,5 @@
 #include <Arduino.h>
 
-/*
- * From Pololu Example Code
- */
 #define NUM_SENSORS             3  // number of sensors used
 #define THRESHOLD               500 //Threshold for line sensing
 
