@@ -55,7 +55,7 @@ byte * get_fft_bins(){
  */
 bool detect_660hz(){
     byte * fft_log_out = get_fft_bins();
-    if (fft_log_out[18] > THRESHOLD && fft_log_out[19] > THRESHOLD)
+    if (fft_log_out[17] > THRESHOLD && fft_log_out[18] > THRESHOLD) //bins 18 & 19, but 0 based so subtract 1
         return true;
     else
         return false;
