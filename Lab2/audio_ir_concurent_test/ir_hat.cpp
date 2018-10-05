@@ -24,13 +24,13 @@ byte * get_fft_bins_ir(){
 }
 
 /**
- * [detect_6008hz] 
- * OUTPUT = returns TRUE if a 6008hz signal is detected by the Arduino,
+ * [detect_6080hz] 
+ * OUTPUT = returns TRUE if a 6080hz signal is detected by the Arduino,
  *          & FALSE otherwise
  * Uses THRESHOLD to determine whether a nearby robot is detected 
  * (emitting IR at 6.08 kHz) or a decoy (emitting at 18 kHz)
  */
-bool detect_6008hz(){
+bool detect_6080hz(){
     byte * fft_log_out = get_fft_bins_ir();
     if (fft_log_out[41] > IR_THRESHOLD && fft_log_out[42] > IR_THRESHOLD)
         return true;

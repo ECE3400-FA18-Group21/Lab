@@ -36,7 +36,7 @@ void loop() {
   }
   while(BEGIN_OPERATIONS) {
     fft_setup_ir();
-    bool ir_detection = detect_6008hz();  
+    bool ir_detection = detect_6080hz();  
     if(ir_detection)
         IR_COUNTER++;
     else
