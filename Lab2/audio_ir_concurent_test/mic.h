@@ -14,14 +14,14 @@
  *   [ADMUX] (ADC mux select) = 0x40 (use ADC0)
  *   [DIDR0] (Digital input select) = 0x01 (disable digital input for adc0)
  */
-void fft_setup();
+void fft_setup_mic();
 
 /**
  * [get_fft_bins] 
  * Runs the FFT operation using the FFT library
  * OUTPUT = FFT magnitude data in the form of a 128-bin byte array
  */
-byte * get_fft_bins();
+byte * get_fft_bins_mic();
 
 /**
  * [detect_660hz] 

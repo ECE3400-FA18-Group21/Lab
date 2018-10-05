@@ -15,7 +15,7 @@
 void fft_setup(){
   TIMSK0 = 0;          // turn off timer0 for lower jitter - delay() and millis() killed
   ADCSRA = 0xe7;       // set the adc to free running mode, set prescaler=128 (default e5=32)
-  ADMUX = 0x40;        // use adc0
+  ADMUX = 0x45;        // use adc5
   DIDR0 = 0x01;        // turn off the digital input for adc0
 }
 

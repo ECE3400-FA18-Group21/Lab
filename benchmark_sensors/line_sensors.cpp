@@ -11,7 +11,7 @@ int read_digital_sensor(int pin){
   pinMode(pin, INPUT);
   long time = micros();
   
-  while (digitalRead(QRE1113_Pin) == HIGH && micros() – time < 3000){
-    int diff = micros() - time; return diff; 
-  } 
+  //while (digitalRead(QRE1113_Pin) == HIGH && micros() – time < 3000){
+  //  int diff = micros() - time; return diff; 
+  //} 
 }
