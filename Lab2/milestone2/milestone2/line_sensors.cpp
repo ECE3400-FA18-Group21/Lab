@@ -2,9 +2,9 @@
 
 unsigned int * checkSensors() {
   static unsigned int sensorValues[NUM_SENSORS]; //declare output array
-  sensorValues[0] = analogRead(A0);
-  sensorValues[1] = analogRead(A1);
-  sensorValues[2] = analogRead(A2);
+  sensorValues[0] = analogRead(0);
+  sensorValues[1] = analogRead(1);
+  sensorValues[2] = analogRead(2);
   
   for (unsigned int i = 0; i < NUM_SENSORS; i++) {
     if (sensorValues[i] < THRESHOLD)

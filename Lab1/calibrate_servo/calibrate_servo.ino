@@ -13,7 +13,7 @@ Servo servo_L;
 void setup() {
   // put your setup code here, to run once:
   servo_R.attach(3);
-  servo_L.attach(4);
+  servo_L.attach(5);
 }
 
 void loop() {

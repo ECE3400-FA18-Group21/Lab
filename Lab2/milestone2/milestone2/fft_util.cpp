@@ -12,7 +12,7 @@
 #include "fft_util.h"
 
 void fft_setup(int dev_select){
-      TIMSK0 = 0;          // turn off timer0 for lower jitter - delay() and millis() killed
+      //TIMSK0 = 0;          // turn off timer0 for lower jitter - delay() and millis() killed
       if(dev_select==1){
         ADCSRA = 0xe7;     // set the adc to free running mode, set prescaler = 128 for microphone
         ADMUX = 0x45;      // use adc5 for mic
@@ -20,12 +20,17 @@ void fft_setup(int dev_select){
         ADCSRA = 0xe5;     // set the adc to free running mode, set prescaler = 32 for ir
         ADMUX = 0x44;      // use adc4 for ir
       }
-      DIDR0 = 0x01;        // turn off the digital input for adc0
+      //DIDR0 = 0x01;        // turn off the digital input for adc0
 }
 
 
 byte * get_fft_bins(int dev_select){
-    cli();                                  // UDRE interrupt slows this way down on arduino1.0
+    //Setup fft
+    byte old_ADCSRA = ADCSRA;
+    byte old_ADMUX = ADMUX;
+    fft_setup(dev_select);
+    
+    //cli();                                  // UDRE interrupt slows this way down on arduino1.0
     for (int i = 0 ; i < 512 ; i += 2) {    // save 256 samples
       while(!(ADCSRA & 0x10));              // wait for adc to be ready
       if(dev_select==1)
@@ -46,6 +51,10 @@ byte * get_fft_bins(int dev_select){
     fft_reorder();                          // reorder the data before doing the fft
     fft_run();                              // process the data in the fft
     fft_mag_log();                          // take the output of the fft
-    sei();                                  // turn interrupts back on
+    //sei();                                  // turn interrupts back on
+
+    // Restore ADC settings- teardown
+    ADCSRA = old_ADCSRA;
+    ADMUX = old_ADCSRA;
     return fft_log_out;
 }
