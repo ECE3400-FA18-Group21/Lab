@@ -16,7 +16,8 @@ void fft_setup(int dev_select){
       if(dev_select==1){
         ADCSRA = 0xe7;     // set the adc to free running mode, set prescaler = 128 for microphone
         ADMUX = 0x45;      // use adc5 for mic
-      }else{
+      }
+      else {
         ADCSRA = 0xe5;     // set the adc to free running mode, set prescaler = 32 for ir
         ADMUX = 0x44;      // use adc4 for ir
       }

@@ -37,6 +37,8 @@ void setup() {
 }
 
 void loop() {
+  //Get default ADC values
+  int test = analogRead(A2);
   ADCSRA_default = ADCSRA;
   ADMUX_default = ADMUX;
   ADCSRB_default = ADCSRB;

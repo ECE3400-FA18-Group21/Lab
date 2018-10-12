@@ -20,7 +20,8 @@ bool detect_wall_6in(int pin){
 bool detect_wall_2in(int pin){
   int val = read_range_sensor(pin);
   Serial.print("IR RANGE FINDER VALUE = ");
-  Serial.println(val);
+  Serial.print(val);
+  Serial.println(" ");
   if(val > (VAL_2_INCH - TOLERANCE))
     return true;
   else
