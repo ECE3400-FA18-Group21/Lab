@@ -29,4 +29,4 @@ byte * get_fft_bins_mic();
  *          & FALSE otherwise
  * Uses THRESHOLD to determine whether the tone is playing or not
  */
-bool detect_660hz();
+bool detect_660hz(byte ADCSRA_default, byte ADCSRB_default);

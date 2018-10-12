@@ -30,4 +30,4 @@ byte * get_fft_bins_ir();
  * Uses THRESHOLD to determine whether a nearby robot is detected 
  * (emitting IR at 6.08 kHz) or a decoy (emitting at 18 kHz)
  */
-bool detect_6080hz();
+bool detect_6080hz(byte ADCSRA_default, byte ADCSRB_default);

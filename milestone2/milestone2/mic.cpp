@@ -29,8 +29,10 @@ byte * get_fft_bins_mic(){
  *          & FALSE otherwise
  * Uses THRESHOLD to determine whether the tone is playing or not
  */
-bool detect_660hz(){
+bool detect_660hz(byte ADCSRA_default, byte ADCSRB_default){
     byte * fft_log_out = get_fft_bins_mic();
+    ADCSRA = ADCSRA_default;
+    ADCSRB = ADCSRB_default;
     if (fft_log_out[17] > MIC_THRESHOLD && fft_log_out[18] > MIC_THRESHOLD) //bins 18 & 19, but 0 based so subtract 1
         return true;
     else
