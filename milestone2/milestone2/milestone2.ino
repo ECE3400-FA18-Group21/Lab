@@ -24,7 +24,6 @@ int SPEED_THRESHOLD = 1.0;
 bool BEGIN_OPERATION = false;
 
 byte ADCSRA_default;
-byte ADMUX_default;
 byte ADCSRB_default;
 
 void setup() {
@@ -40,7 +39,6 @@ void loop() {
   //Get default ADC values
   int test = analogRead(A2);
   ADCSRA_default = ADCSRA;
-  ADMUX_default = ADMUX;
   ADCSRB_default = ADCSRB;
   
   //Mic detection code
@@ -100,6 +98,5 @@ bool begin_operation() {
 
 void reset_ADC() {
     ADCSRA = ADCSRA_default;
-    ADMUX = ADMUX_default;
     ADCSRB = ADCSRB_default;
 }
