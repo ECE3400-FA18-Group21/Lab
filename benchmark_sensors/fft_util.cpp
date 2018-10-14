@@ -25,7 +25,7 @@ void fft_setup(int dev_select){
 
 
 byte * get_fft_bins(int dev_select){
-    cli();                                  // UDRE interrupt slows this way down on arduino1.0
+    //cli();                                  // UDRE interrupt slows this way down on arduino1.0
     for (int i = 0 ; i < 512 ; i += 2) {    // save 256 samples
       while(!(ADCSRA & 0x10));              // wait for adc to be ready
       if(dev_select==1)
@@ -46,6 +46,6 @@ byte * get_fft_bins(int dev_select){
     fft_reorder();                          // reorder the data before doing the fft
     fft_run();                              // process the data in the fft
     fft_mag_log();                          // take the output of the fft
-    sei();                                  // turn interrupts back on
+    //sei();                                  // turn interrupts back on
     return fft_log_out;
 }

@@ -16,4 +16,4 @@ bool detect_wall_6in(int pin);
  * and false if it is much closer than 2 inches or much farther than 2 inches.
  * [pin] is the analog pin to read from.
  */
-bool detect_wall_2in(int pin);
+bool detect_wall_3in(int pin);
