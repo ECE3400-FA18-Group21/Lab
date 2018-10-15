@@ -20,13 +20,18 @@ void setup() {
   
   pinMode(7, OUTPUT);   //set pin as output to toggle LED --> IR circuit
   pinMode(8, OUTPUT);   //set pin as output to toggle LED --> microphone circuit
-  servo_R.attach(3);
+  servo_R.attach(6);
   servo_L.attach(5);
   stopMotors(servo_L, servo_R);
 }
 
 void loop() {
   while(!BEGIN_OPERATIONS) {
+    unsigned int * sensorStatus = checkSensorsDigital();
+    Serial.print(sensorStatus[0]);
+    Serial.print(sensorStatus[1]);
+    Serial.print(sensorStatus[2]);
+    Serial.println("");
     stopMotors(servo_L, servo_R);
     bool microphone_detection = detect_660hz();  
     if(microphone_detection)
@@ -43,7 +48,7 @@ void loop() {
   while(BEGIN_OPERATIONS) {
     Serial.println(read_range_sensor(3));
     //Line tracking code
-    unsigned int * sensorStatus = checkSensors();
+    unsigned int * sensorStatus = checkSensorsDigital();
     Serial.println(sensorStatus[0]);
     if((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ){ // wall detected at intersection!
       turnLeftIntersection(servo_L, servo_R);

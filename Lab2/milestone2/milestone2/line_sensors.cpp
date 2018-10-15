@@ -1,16 +1,45 @@
 #include "line_sensors.h"
 
-unsigned int * checkSensors() {
-  static unsigned int sensorValues[NUM_SENSORS]; //declare output array
-  sensorValues[0] = analogRead(0);
-  sensorValues[1] = analogRead(1);
-  sensorValues[2] = analogRead(2);
+//Analog read & threshold function
+unsigned int * checkSensorsAnalog() {
+  static unsigned int sensorValuesAnalog[NUM_SENSORS_ANALOG]; //declare output array
+  sensorValuesAnalog[0] = analogRead(0);
+  sensorValuesAnalog[1] = analogRead(1);
+  sensorValuesAnalog[2] = analogRead(2);
   
-  for (unsigned int i = 0; i < NUM_SENSORS; i++) {
-    if (sensorValues[i] < THRESHOLD)
-      sensorValues[i] = 0; //Sees Bright Line
+  for (unsigned int i = 0; i < NUM_SENSORS_ANALOG; i++) {
+    if (sensorValuesAnalog[i] < THRESHOLD_ANALOG)
+      sensorValuesAnalog[i] = 0; //sees bright white
     else
-      sensorValues[i] = 1; //Sees Dark Background
+      sensorValuesAnalog[i] = 1; //sees dark color (black)
     }
-  return sensorValues;
+  return sensorValuesAnalog;
+}
+
+//Digital read function
+int readQD(int pin) {
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, HIGH);
+  delayMicroseconds(10);
+  pinMode(pin, INPUT);
+  long time = micros();
+  while((digitalRead(pin) == HIGH) && (micros()-time<3000));
+  int diff = micros() - time;
+  return diff;
+}
+//Digital read threshold function
+unsigned int * checkSensorsDigital() {
+  static unsigned int sensorValuesDigital[NUM_SENSORS_DIGITAL]; //declare output array
+  sensorValuesDigital[0] = readQD(0);
+  sensorValuesDigital[1] = readQD(1);
+  sensorValuesDigital[2] = readQD(2);
+  sensorValuesDigital[3] = readQD(3);
+  
+  for (unsigned int i = 0; i < NUM_SENSORS_DIGITAL; i++) {
+    if (sensorValuesDigital[i] < THRESHOLD_DIGITAL)
+      sensorValuesDigital[i] = 0; //sees bright white
+    else
+      sensorValuesDigital[i] = 1; //sees dark color (black)
+    }
+  return sensorValuesDigital;
 }
