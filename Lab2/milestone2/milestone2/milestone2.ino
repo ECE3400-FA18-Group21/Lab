@@ -28,10 +28,6 @@ void setup() {
 void loop() {
   while(!BEGIN_OPERATIONS) {
     unsigned int * sensorStatus = checkSensorsDigital();
-    Serial.print(sensorStatus[0]);
-    Serial.print(sensorStatus[1]);
-    Serial.print(sensorStatus[2]);
-    Serial.println("");
     stopMotors(servo_L, servo_R);
     bool microphone_detection = detect_660hz();  
     if(microphone_detection)
