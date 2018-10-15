@@ -20,9 +20,10 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT); 
   servo_R.attach(3);
   servo_L.attach(5);
+  //fft_setup_mic();
 }
 
 void loop() {
-  stopMotors(servo_L, servo_R);
+  moveForward(servo_R, servo_L);
   Serial.println(read_range_sensor(3));
 }

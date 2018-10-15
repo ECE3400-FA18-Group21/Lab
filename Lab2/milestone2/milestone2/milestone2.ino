@@ -13,8 +13,6 @@ int IR_COUNTER = 0;
 int MIC_COUNTER = 0;
 bool BEGIN_OPERATIONS = false;
 
-bool wall_detected = false;
-
 void setup() {
   Serial.begin(9600);
   
@@ -41,15 +39,11 @@ void loop() {
         digitalWrite(8, LOW);
   }
   while(BEGIN_OPERATIONS) {
-    Serial.println(read_range_sensor(3));
     //Line tracking code
     unsigned int * sensorStatus = checkSensors();
     Serial.println(sensorStatus[0]);
-    if((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ){ // wall detected at intersection!
+    if(detect_wall_2in(3)){ // wall detected at intersection!
       turnLeftIntersection(servo_L, servo_R);
-    }
-    else if(detect_wall_3in(3)){
-      turnLeft(servo_L, servo_R);
     }
     // Else just track the line
     else if (sensorStatus[0] == 0) //turn Right
@@ -61,10 +55,16 @@ void loop() {
     }
     
     //IR Detection Code
-    while(detect_6080hz()){  
+    bool ir_detection = detect_6080hz();  
+    if(ir_detection)
+        IR_COUNTER++;
+    else
+        IR_COUNTER=0;
+    if(IR_COUNTER > 5) {            //set this to a better threshold
         digitalWrite(7, HIGH);
         stopMotors(servo_L, servo_R);
     }
+    else
         digitalWrite(7, LOW);  
   }
 }
