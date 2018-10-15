@@ -1,3 +1,10 @@
+/*
+ * @date: 10.15.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ */
+ 
 #include "line_sensors.h"
 
 //Analog read & threshold function
@@ -30,10 +37,10 @@ int readQD(int pin) {
 //Digital read threshold function
 unsigned int * checkSensorsDigital() {
   static unsigned int sensorValuesDigital[NUM_SENSORS_DIGITAL]; //declare output array
-  sensorValuesDigital[0] = readQD(0);
-  sensorValuesDigital[1] = readQD(1);
-  sensorValuesDigital[2] = readQD(2);
-  sensorValuesDigital[3] = readQD(3);
+  sensorValuesDigital[0] = readQD(2); //UPDATE pin assignments
+  sensorValuesDigital[1] = readQD(3); //UPDATE pin assignments
+  sensorValuesDigital[2] = readQD(4); //UPDATE pin assignments
+  sensorValuesDigital[3] = readQD(9); //UPDATE pin assignments
   
   for (unsigned int i = 0; i < NUM_SENSORS_DIGITAL; i++) {
     if (sensorValuesDigital[i] < THRESHOLD_DIGITAL)

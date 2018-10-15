@@ -1,6 +1,12 @@
 #define VAL_6_INCH 100
 #define VAL_3_INCH 200
-
+/*
+ * @date: 10.15.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ */
+ 
 #include "ir_rangefinder.h"
 #include <Arduino.h>
 

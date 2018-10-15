@@ -1,6 +1,8 @@
-/* Team 21
- * 9/1/18
- * 
+/*
+ * @date: 10.15.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
  */
  
 #include "move_commands.h"

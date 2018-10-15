@@ -8,16 +8,14 @@
 Servo servo_R;
 Servo servo_L;
 
-
 int IR_COUNTER = 0;
 int MIC_COUNTER = 0;
+int MIC_COUNTER_THRESHOLD = 5;
 bool BEGIN_OPERATIONS = false;
-
 bool wall_detected = false;
 
 void setup() {
   Serial.begin(9600);
-  
   pinMode(7, OUTPUT);   //set pin as output to toggle LED --> IR circuit
   pinMode(8, OUTPUT);   //set pin as output to toggle LED --> microphone circuit
   servo_R.attach(6);
@@ -27,27 +25,23 @@ void setup() {
 
 void loop() {
   while(!BEGIN_OPERATIONS) {
-    unsigned int * sensorStatus = checkSensorsDigital();
-    Serial.print(sensorStatus[0]);
-    Serial.print(sensorStatus[1]);
-    Serial.print(sensorStatus[2]);
-    Serial.println("");
     stopMotors(servo_L, servo_R);
-    bool microphone_detection = detect_660hz();  
-    if(microphone_detection)
+
+    //Microphone detection code
+    if(detect_660hz())
         MIC_COUNTER++;
     else
         MIC_COUNTER=0;
-    if(MIC_COUNTER > 5) {           //set this to a better threshold
+    if(MIC_COUNTER > MIC_COUNTER_THRESHOLD) {
         digitalWrite(8, HIGH);
         BEGIN_OPERATIONS = true;
     }
     else
         digitalWrite(8, LOW);
   }
+  
   while(BEGIN_OPERATIONS) {
-    Serial.println(read_range_sensor(3));
-    //Line tracking code
+    //Line tracking & Wall detection Code
     unsigned int * sensorStatus = checkSensorsDigital();
     Serial.println(sensorStatus[0]);
     if((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ){ // wall detected at intersection!
@@ -65,11 +59,11 @@ void loop() {
       moveForward(servo_L, servo_R);
     }
     
-    //IR Detection Code
+    //IR detection Code
     while(detect_6080hz()){  
         digitalWrite(7, HIGH);
         stopMotors(servo_L, servo_R);
     }
-        digitalWrite(7, LOW);  
+    digitalWrite(7, LOW);  
   }
 }

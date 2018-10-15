@@ -1,11 +1,11 @@
 #define LOG_OUT 1     // use the log output function
 #define FFT_N 256     // set to 256 point fft
 /*
- * @date: 10.04.2018
- * @version: 01
+ * @date: 10.15.2018
+ * @version: 02
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * Used to complete Lab 2 documentation
+ * Used to complete Milestone 2
  */
 #include <FFT.h>
 #include <Arduino.h>
@@ -25,12 +25,13 @@ void fft_setup(int dev_select){
 
 
 byte * get_fft_bins(int dev_select){
-    //Setup fft
+    //Store default ADC values
     byte old_ADCSRA = ADCSRA;
     byte old_ADMUX = ADMUX;
     byte old_TIMSK0 = TIMSK0;
     byte old_DIDR0 = DIDR0;
     
+    //Setup fft
     fft_setup(dev_select);
     
     //cli();                                  // UDRE interrupt slows this way down on arduino1.0
