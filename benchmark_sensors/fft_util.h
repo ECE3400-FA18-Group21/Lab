@@ -1,9 +1,9 @@
 /*
- * @date: 10.04.2018
+ * @date: 09.28.2018
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * Used to complete Lab 2 documentation
+ * Benchmark Sensors
  */
  
 /**

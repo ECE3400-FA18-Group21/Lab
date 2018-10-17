@@ -3,6 +3,7 @@
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
+ * Benchmark Sensors
  */
 #define IR_THRESHOLD 100 // bin thresholding for 6.08 kHz signal
 

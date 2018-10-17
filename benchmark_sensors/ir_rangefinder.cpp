@@ -1,3 +1,10 @@
+/*
+ * @date: 09.28.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ * Benchmark Sensors
+ */
 #define VAL_6_INCH 140
 #define VAL_2_INCH 140
 #define TOLERANCE 10

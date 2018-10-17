@@ -1,12 +1,13 @@
-#define LOG_OUT 1     // use the log output function
-#define FFT_N 256     // set to 256 point fft
 /*
- * @date: 10.04.2018
+ * @date: 09.28.2018
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * Used to complete Lab 2 documentation
+ * Benchmark Sensors
  */
+#define LOG_OUT 1     // use the log output function
+#define FFT_N 256     // set to 256 point fft
+
 #include <FFT.h>
 #include <Arduino.h>
 #include "fft_util.h"

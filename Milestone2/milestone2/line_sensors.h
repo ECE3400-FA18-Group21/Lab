@@ -1,13 +1,15 @@
+/*
+ * @date: 10.17.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ * Used to complete Milestone 2 documentation
+ */
 #define NUM_SENSORS_ANALOG      3    //number of analog sensors used
 #define NUM_SENSORS_DIGITAL     4    //number of digital sensors used 
 #define THRESHOLD_ANALOG        500  //Threshold for line sensing
 #define THRESHOLD_DIGITAL       1000 //Threshold for line sensing
-/*
- * @date: 10.15.2018
- * @version: 01
- * @course: ECE 3400, Fall 2018
- * @team: 21
- */
+
  #include <Arduino.h>
 
 /*

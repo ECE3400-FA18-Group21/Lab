@@ -1,8 +1,10 @@
-/* Team 21
- * 9/1/18
- * 
+/*
+ * @date: 09.28.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ * Benchmark Sensors
  */
- 
 #include "move_commands.h"
 
 void stopMotors(Servo servo_L, Servo servo_R){
