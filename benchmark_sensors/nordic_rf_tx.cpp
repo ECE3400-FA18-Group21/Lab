@@ -18,7 +18,7 @@ bool radioNumber = 0; //tx
 RF24 radio(7,8);
 /**********************************************************/
 
-//byte addresses[][6] = {"1Node","2Node"};
+//byte addresses[][6] = {"1Node","2Node"};                  //CHECK THIS CALCULATION
 const uint64_t pipes[2] = {0x0000000042LL, 0x0000000043LL}; //team 21, left is the tx (robot), right is the rx (base station)
 
 
