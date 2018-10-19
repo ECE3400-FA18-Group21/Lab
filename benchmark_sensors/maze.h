@@ -1,4 +1,11 @@
 /*
+ * @date: 09.28.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ * Benchmark Sensors
+ */
+/*
  * The Maze class represents a maze for the ECE 3400 class
  */
 class Maze{
@@ -19,4 +26,7 @@ class Maze{
      * has moved one square forward and sees the following walls adjacent to the square
      */
     virtual void advanceIntersection(bool frontWall, bool leftWall, bool rightWall) = 0;
+    /*
+     * TODO: Add navigation commands for robot and treasure detection
+     */
 };

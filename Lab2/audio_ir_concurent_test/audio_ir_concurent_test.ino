@@ -1,5 +1,4 @@
 #include "mic.h"
-#include "ir_hat.h"
 /*
  * @date: 10.04.2018
  * @version: 01
@@ -8,6 +7,7 @@
  * Current 660 Hz detection (microphone) & 6008 Hz detection (IR)
  *    Used to complete Lab 2 documentation
  */
+#include "ir_hat.h"
 
 int IR_COUNTER = 0;
 int MIC_COUNTER = 0;
