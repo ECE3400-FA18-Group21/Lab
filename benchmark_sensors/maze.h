@@ -26,4 +26,7 @@ class Maze{
      * has moved one square forward and sees the following walls adjacent to the square
      */
     virtual void advanceIntersection(bool frontWall, bool leftWall, bool rightWall) = 0;
+    /*
+     * TODO: Add navigation commands for robot and treasure detection
+     */
 };
