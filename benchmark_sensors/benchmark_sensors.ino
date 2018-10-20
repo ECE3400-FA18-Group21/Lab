@@ -33,5 +33,5 @@ void loop() {
   byte to_send = 5;
   RF24_tx_send(radio, &to_send);
   //received = RF_rx_read(RF24 radio);
-  //Serial.println("received");
+  //Serial.println(received);
 }
