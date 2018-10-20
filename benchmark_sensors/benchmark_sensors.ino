@@ -24,14 +24,14 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   servo_R.attach(3);
   servo_L.attach(5);
-  RF24_tx_setup(radio);
-  //RF24_rx_setup(radio);
+//  RF24_tx_setup(radio);
+  RF24_rx_setup(radio);
 }
 
 void loop() {
-  //byte received;
-  byte to_send = 5;
-  RF24_tx_send(radio, &to_send);
-  //received = RF_rx_read(RF24 radio);
-  //Serial.println(received);
+  byte received;
+//  byte to_send = 5;
+//  RF24_tx_send(radio, &to_send);
+  received = RF24_rx_read(radio);
+//  Serial.println(received);
 }

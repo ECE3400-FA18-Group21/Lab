@@ -26,7 +26,7 @@ RF24 radio(7,8);
 /**********************************************************/
                                                                            // Topology
 //byte addresses[][6] = {"1Node","2Node"};              // Radio pipe addresses for the 2 nodes to communicate.
-const uint64_t addresses[][2] = { 0x0000000024LL, 0x0000000025LL };
+const uint64_t addresses[][2] = { 0x000000006ELL, 0x000000006FLL };
 
 // Role management: Set up role.  This sketch uses the same software for all the nodes
 // in this system.  Doing so greatly simplifies testing.  
