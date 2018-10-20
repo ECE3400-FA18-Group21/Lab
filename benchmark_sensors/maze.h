@@ -29,4 +29,9 @@ class Maze{
     /*
      * TODO: Add navigation commands for robot and treasure detection
      */
+
+    
+    virtual byte getX() = 0;
+
+    virtual byte getY() = 0;
 };
