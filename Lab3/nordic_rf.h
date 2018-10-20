@@ -12,3 +12,7 @@ void RF24_tx_setup();
 
 /* Send byte array of length n */
 void RF24_tx_send(byte *msg, int n);
+
+void RF24_rx_setup();
+
+void RF24_rx_read();
