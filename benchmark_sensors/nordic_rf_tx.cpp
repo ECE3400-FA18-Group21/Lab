@@ -1,11 +1,10 @@
 /*
- * @date: 09.28.2018
+ * @date: 10.18.2018
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * Benchmark Sensors
+ * Lab 3
  */
-/* Should copy this sketch to local directory and test there before integrating with rest of code*/
 
 #include <SPI.h>
 #include "RF24.h"
@@ -18,8 +17,8 @@ bool radioNumber = 0; //tx
 RF24 radio(7,8);
 /**********************************************************/
 
-//byte addresses[][6] = {"1Node","2Node"};                  //CHECK THIS CALCULATION
-const uint64_t pipes[2] = {0x0000000042LL, 0x0000000043LL}; //team 21, left is the tx (robot), right is the rx (base station)
+//byte addresses[][6] = {"1Node","2Node"};                 
+const uint64_t pipes[2] = {0x000000006ELL, 0x000000006FLL}; //team 21, left is the tx (robot), right is the rx (base station)
 
 
 void setup() {
