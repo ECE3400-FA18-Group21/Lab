@@ -56,9 +56,23 @@ class MazeImpl : public Maze{
       int x = (int)(pos >> 4);
       int y = (int)(pos & 0x0F);
       // OR the values in the bitmask with the corresponding wall positions
-      walls[y]      |= (0x01) && mask;
+      walls[y]      |= (0x01) && mask; 
       walls[y + 1]  |= (0x02) && mask;
       walls[x + 9]  |= (0x04) && mask;
       walls[x + 10] |= (0x08) && mask;
     };
+
+    byte getX() {
+      return (pos >> 4);
+    };
+
+    byte getY() {
+      return (pos & 0x0F);
+    };
+
+    void getWallsAtCurrPos() {
+      return walls[pos >> 4];
+      
+    
+    }
 };
