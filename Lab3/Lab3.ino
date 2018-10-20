@@ -22,7 +22,6 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT); 
   servo_R.attach(3);
   servo_L.attach(5);
-  //fft_setup_mic();
 }
 
 void loop() {

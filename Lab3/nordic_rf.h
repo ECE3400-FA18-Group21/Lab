@@ -13,6 +13,8 @@ void RF24_tx_setup();
 /* Send byte array of length n */
 void RF24_tx_send(byte *msg, int n);
 
+/* Set up RF24 transceiver for receive mode on Base Station */
 void RF24_rx_setup();
 
+/* Read data if available */
 void RF24_rx_read();
