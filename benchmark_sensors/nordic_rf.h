@@ -6,15 +6,17 @@
  * Benchmark Sensors
  */
 
+#include <SPI.h>
+#include <RF24.h>
 
 /* Set up RF24 transceiver for transmit mode on Robot */
-void RF24_tx_setup();
+void RF24_tx_setup(RF24 radio);
 
 /* Send byte array of length n */
-void RF24_tx_send(byte *msg, int n);
+void RF24_tx_send(RF24 radio, byte *msg);
 
 /* Set up RF24 transceiver for receive mode on Base Station */
-void RF24_rx_setup();
+void RF24_rx_setup(RF24 radio);
 
 /* Read data if available */
-void RF24_rx_read();
+byte RF24_rx_read(RF24 radio);
