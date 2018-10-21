@@ -83,7 +83,7 @@ String Maze::getGUIMessage(byte x, byte y) {
   String south = south_bool ? "true" : "false";
   String west = west_bool ? "true" : "false";
   String east = east_bool ? "true" : "false";
-  char buffer[50];
+  char buffer[65];
   int n;
   n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s", x, y, north, south, west, east);
   for (int i = 0; i < n; i++) {
