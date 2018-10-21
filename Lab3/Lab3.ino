@@ -3,11 +3,17 @@
 #include "ir_rangefinder.h"
 #include "move_commands.h"
 #include "line_sensors.h"
+#include "nordic_rf.h"
+#include "maze.h"
 #include <Servo.h>
+#include <RF24.h>
 
 Servo servo_R;
 Servo servo_L;
 
+
+RF24 radio(9,10);
+Maze maze = Maze();
 
 int IR_COUNTER = 0;
 int MIC_COUNTER = 0;
@@ -23,6 +29,8 @@ void setup() {
   servo_R.attach(6);
   servo_L.attach(5);
   stopMotors(servo_L, servo_R);
+  
+  RF24_tx_setup(radio);
 }
 
 void loop() {
@@ -47,13 +55,20 @@ void loop() {
     unsigned int * sensorStatus = checkSensorsDigital();
     Serial.println(sensorStatus[0]);
     if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ) { // wall detected at intersection!
-      if (detect_wall_6in(1))
+      if (detect_wall_6in(1)){
         turnLeftIntersection(servo_L, servo_R);
-      else
+        send_advance_intersection(radio, true, false, true);
+        send_turn_left(radio);
+      }
+      else{
         turnRightIntersection(servo_L, servo_R);
+        send_advance_intersection(radio, true, false, false);
+        send_turn_right(radio);
+      }
     }
     else if (detect_wall_3in(3)) {
       turnLeft(servo_L, servo_R);
+      send_turn_left(radio);
     }
     // Else just track the line
     else if (sensorStatus[0] == 0) //turn Right
