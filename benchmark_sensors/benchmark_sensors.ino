@@ -20,7 +20,7 @@ Servo servo_L;
 
 RF24 radio(7, 8);
 
-Maze maze();
+Maze maze = Maze();
 
 void setup() {
   Serial.begin(9600);
@@ -33,6 +33,18 @@ void setup() {
 
 void loop() {
   byte received;
+  maze.printInfo();
+  for(byte i = 0; i < 4; i ++){
+    maze.turnLeft();
+    maze.printInfo();
+  }
+  for(byte i = 0; i < 4; i ++){
+    maze.turnRight();
+    maze.printInfo();
+  }
+  maze.advanceIntersection(true, true, true);
+  maze.printInfo();
+  while(true);
 //  byte to_send = 5;
 //  RF24_tx_send(radio, &to_send);
 //received = RF24_rx_read(radio);
