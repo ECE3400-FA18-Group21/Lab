@@ -10,6 +10,7 @@
 #include "ir_rangefinder.h"
 #include "move_commands.h"
 #include "nordic_rf.h"
+#include "maze.h"
 
 #include <Servo.h>
 #include <RF24.h>
@@ -18,6 +19,8 @@ Servo servo_R;
 Servo servo_L;
 
 RF24 radio(7, 8);
+
+Maze maze();
 
 void setup() {
   Serial.begin(9600);
@@ -32,6 +35,6 @@ void loop() {
   byte received;
 //  byte to_send = 5;
 //  RF24_tx_send(radio, &to_send);
-  received = RF24_rx_read(radio);
+//received = RF24_rx_read(radio);
 //  Serial.println(received);
 }
