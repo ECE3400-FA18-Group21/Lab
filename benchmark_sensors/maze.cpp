@@ -74,48 +74,22 @@ byte Maze::getY() {
 
 String Maze::getGUIMessage(byte x, byte y) {
   //x, y are raster positions
-  bool north = walls[y] & (0x80 >> x);
-  bool south = walls[y+1] & (0x80 >> x);
-  bool west = walls[x+9] & (0x80 >> y);
-  bool east = walls[x+10] & 0x80 >> y);
+    bool north_bool = walls[y] & (0x80 >> x);
+  bool south_bool = walls[y+1] & (0x80 >> x);
+  bool west_bool = walls[x+9] & (0x80 >> y);
+  bool east_bool = walls[x+10] & 0x80 >> y);
 
-  Serial.print(y);
-  Serial.print(",");
-  Serial.print(x);
-  Serial.print(",");
-  if (north) {
-    Serial.print("north=true");
-    Serial.print(",");
+  String north = north_bool ? "true" : "false";
+  String south = south_bool ? "true" : "false";
+  String west = west_bool ? "true" : "false";
+  String east = east_bool ? "true" : "false";
+  char buffer[50];
+  int n;
+  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s", x, y, north, south, west, east);
+  for (int i = 0; i < n; i++) {
+    Serial.print(buffer[i]);
   }
-  else {
-    Serial.print("north=false");
-    Serial.print(",");
-  }
-  
-  if (south) {
-    Serial.print("south=true");
-    Serial.print(",");
-  }
-  else {
-    Serial.print("south=false");
-    Serial.print(",");
-  }
-  
-  if (west) {
-    Serial.print("west=true");
-    Serial.print(",");
-  }
-  else {
-    Serial.print("west=false");
-    Serial.print(",");
-  }
-  
-  if (east) {
-    Serial.println("east=true");
-  }
-  else {
-    Serial.println("east=false");
-  }
+  Serial.println();
   
 }
 
