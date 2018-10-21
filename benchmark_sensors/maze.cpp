@@ -74,10 +74,10 @@ byte Maze::getY() {
 
 String Maze::getGUIMessage(byte x, byte y) {
   //x, y are raster positions
-  bool north_bool = walls[y] & (0x80 >> x);
-  bool south_bool = walls[y+1] & (0x80 >> x);
-  bool west_bool = walls[x+9] & (0x80 >> y);
-  bool east_bool = walls[x+10] & 0x80 >> y);
+  bool north_bool = walls[y] & (0x1 << x);
+  bool south_bool = walls[y+1] & (0x1 << x);
+  bool west_bool = walls[x+9] & (0x1 << y);
+  bool east_bool = walls[x+10] & (0x1 << y);
 
   String north = north_bool ? "true" : "false";
   String south = south_bool ? "true" : "false";
