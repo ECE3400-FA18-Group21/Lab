@@ -34,14 +34,15 @@ void setup() {
 void loop() {
   byte received;
   maze.printInfo();
-  for(byte i = 0; i < 4; i ++){
-    maze.turnLeft();
-    maze.printInfo();
-  }
-  for(byte i = 0; i < 4; i ++){
-    maze.turnRight();
-    maze.printInfo();
-  }
+  maze.advanceIntersection(false, false, true);
+  maze.printInfo();
+  maze.turnLeft();
+  maze.advanceIntersection(true, true, true);
+  maze.printInfo();
+  maze.turnLeft();
+  maze.advanceIntersection(true, true, true);
+  maze.printInfo();
+  maze.turnLeft();
   maze.advanceIntersection(true, true, true);
   maze.printInfo();
   while(true);
