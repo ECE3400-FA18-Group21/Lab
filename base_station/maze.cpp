@@ -73,7 +73,23 @@ byte Maze::getY() {
 }
 
 String Maze::getGUIMessage(byte x, byte y) {
+  //x, y are raster positions
+  bool north_bool = walls[y] & (0x1 << x);
+  bool south_bool = walls[y+1] & (0x1 << x);
+  bool west_bool = walls[x+9] & (0x1 << y);
+  bool east_bool = walls[x+10] & (0x1 << y);
 
+  String north = north_bool ? "true" : "false";
+  String south = south_bool ? "true" : "false";
+  String west  = west_bool ? "true" : "false";
+  String east  = east_bool ? "true" : "false";
+  char buffer[65];
+  int n;
+  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s", y, x, north, south, west, east); //x y flipped b/c GUI takes row # first
+  for (int i = 0; i < n; i++) {
+    Serial.print(buffer[i]);
+  }
+  Serial.println();
 }
 
 void Maze::printInfo() {
