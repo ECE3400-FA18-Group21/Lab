@@ -9,8 +9,6 @@
 #include "nordic_rf.h"
 #include <Arduino.h>
 
-int retries = 15;
-
 // 6ELL is Robot, 6FLL is base station
 const uint64_t addresses[][2] = {0x000000006ELL, 0x000000006FLL};
 
