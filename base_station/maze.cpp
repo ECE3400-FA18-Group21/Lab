@@ -231,7 +231,89 @@ byte Maze::getY() {
 }
 
 String Maze::getGUIMessage(byte x, byte y) {
+  bool north_bool;
+  bool south_bool;
+  bool west_bool;
+  bool east_bool;
 
+  if (y == 0) {
+    if (x == 0) {
+      north_bool = 1;
+      west_bool = 1;
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+      east_bool = (walls[y] & (0x1 << x)) >> x;
+    }
+    else if (x == 8) {
+      north_bool = 1;
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+      west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
+      east_bool = 1;    
+    }
+    else {
+      north_bool = 1;
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+
+      west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
+      east_bool = (walls[y] & (0x1 << x)) >> x;
+    }
+  }
+  else if (y == 8) {
+    if (x == 0) {
+      north_bool = (walls[x+9] & (0x1 << (y-1))) >> (y-1);
+      south_bool = 1;
+      west_bool = 1;
+      east_bool = (walls[y] & (0x1 << x)) >> x;
+    }
+    else if (x == 8) {
+      north_bool = (walls[x+9] & (0x1 << (y-1))) >> (y-1);
+      south_bool = 1;
+      west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
+      east_bool = 1;
+    }
+    else {
+      north_bool = (walls[x+9] & (0x1 << (y-1))) >> (y-1);
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+      west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
+      south_bool = 1;
+    }
+  }
+  else if (x == 0){
+      north_bool = (walls[x+9] & (0x1 << (y-1))) >> (y-1);
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+      west_bool = 1;
+      east_bool = (walls[y] & (0x1 << x)) >> x;
+  }
+  else if (x == 8) {
+      north_bool = (walls[x+9] & (0x1 << (y-1))) >> (y-1);
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+      west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
+      east_bool = 1;
+  }
+  else {
+      north_bool = (walls[x+9] & (0x1 << (y-1))) >> (y-1);
+      south_bool = (walls[x+9] & (0x1 << y)) >> y;
+      west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
+      east_bool = (walls[y] & (0x1 << x)) >> x;
+  }
+  char north_char[6];
+  char south_char[6];
+  char east_char[6];
+  char west_char[6];
+  String north = north_bool ? "true" : "false";
+  String south = south_bool ? "true" : "false";
+  String west = west_bool ? "true" : "false";
+  String east = east_bool ? "true" : "false";
+  north.toCharArray(north_char, 6);
+  south.toCharArray(south_char, 6);
+  west.toCharArray(west_char, 6);
+  east.toCharArray(east_char, 6);
+  char buffer[50];
+  int n;
+  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,robot=false", y, x, north_char, south_char, west_char, east_char); //x y flipped b/c GUI takes row # first
+  for (int i = 0; i < n; i++) {
+    Serial.print(buffer[i]);
+  }
+  Serial.println();
 }
 
 void Maze::printInfo() {
