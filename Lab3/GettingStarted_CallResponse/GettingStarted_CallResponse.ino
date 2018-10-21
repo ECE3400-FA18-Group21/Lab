@@ -23,13 +23,7 @@ bool radioNumber = 1;
 RF24 radio(7,8);
 /**********************************************************/
                                                                            // Topology
-const uint64_t addresses[][2] = {0x0000000024LL, 0x0000000025LL};              // Radio pipe addresses for the 2 nodes to communicate.
-
-// Role management: Set up role.  This sketch uses the same software for all the nodes
-// in this system.  Doing so greatly simplifies testing.  
-typedef enum { role_ping_out = 1, role_pong_back } role_e;                 // The various roles supported by this sketch
-const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back"};  // The debug-friendly names of those roles
-role_e role = role_pong_back;                                              // The role of the current running sketch
+const uint64_t addresses[][2] = {0x000000006ELL, 0x000000006FLL};              // Radio pipe addresses for the 2 nodes to communicate.
 
 byte counter = 1;                                                          // A single byte to keep track of the data being sent back and forth
 
@@ -48,7 +42,6 @@ void setup(){
   radio.enableAckPayload();                     // Allow optional ack payloads
   radio.enableDynamicPayloads();                // Ack payloads are dynamic payloads
   
-  radio.openWritingPipe(addresses[1]);        // Both radios listen on the same pipes by default, but opposite addresses
   radio.openReadingPipe(1,addresses[0]);      // Open a reading pipe on address 0, pipe 1
   radio.startListening();                       // Start listening  
   

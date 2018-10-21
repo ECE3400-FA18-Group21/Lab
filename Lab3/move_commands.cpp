@@ -1,11 +1,13 @@
 /*
- * @date: 09.28.2018
+ * @date: 10.17.2018
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * Benchmark Sensors
+ * Used to complete Milestone 2 documentation
  */
+ 
 #include "move_commands.h"
+#include "ir_rangefinder.h"
 
 void stopMotors(Servo servo_L, Servo servo_R){
   servo_R.write(90);

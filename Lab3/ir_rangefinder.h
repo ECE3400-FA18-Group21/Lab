@@ -1,10 +1,11 @@
 /*
- * @date: 09.28.2018
+ * @date: 10.17.2018
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * Benchmark Sensors
+ * Used to complete Milestone 2 documentation
  */
+ 
 /**
  * [read_range_sensor] reads [pin] and returns the raw rangefinder sensor reading
  */
@@ -23,4 +24,4 @@ bool detect_wall_6in(int pin);
  * and false if it is much closer than 2 inches or much farther than 2 inches.
  * [pin] is the analog pin to read from.
  */
-bool detect_wall_2in(int pin);
+bool detect_wall_3in(int pin);
