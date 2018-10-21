@@ -158,11 +158,63 @@ void Maze::advanceIntersection(bool frontWall, bool leftWall, bool rightWall) {
       break;
     //East
     case 1:
-
+      if (frontWall) {
+        // Make sure the wall is in bounds- otherwise don't change anything
+        if (x_coord < 8)
+          mask = 1 << x_coord;
+        else
+          mask = 0;
+        y_walls = y_walls | mask;
+        walls[y_coord] = y_walls;
+      }
+      if (leftWall) {
+        // Make sure the wall is in bounds- otherwise don't change anything
+        if (y_coord > 0)
+          mask = 1 << (y_coord - 1);
+        else
+          mask = 0;
+        x_walls = x_walls | mask;
+        walls[(x_coord + 9)] = x_walls;
+      }
+      if (rightWall) {
+        // Make sure the wall is in bounds- otherwise don't change anything
+        if (y_coord < 8)
+          mask = 1 << y_coord;
+        else
+          mask = 0;
+        x_walls = x_walls | mask;
+        walls[(x_coord + 9)] = x_walls;
+      }
       break;
     //West
     case 3:
-
+      if (frontWall) {
+        // Make sure the wall is in bounds- otherwise don't change anything
+        if (x_coord > 0)
+          mask = 1 << (x_coord - 1);
+        else
+          mask = 0;
+        y_walls = y_walls | mask;
+        walls[y_coord] = y_walls;
+      }
+      if (leftWall) {
+        // Make sure the wall is in bounds- otherwise don't change anything
+        if (y_coord < 8)
+          mask = 1 << y_coord;
+        else
+          mask = 0;
+        x_walls = x_walls | mask;
+        walls[(x_coord + 9)] = x_walls;
+      }
+      if (rightWall) {
+        // Make sure the wall is in bounds- otherwise don't change anything
+        if (y_coord > 0)
+          mask = 1 << (y_coord - 1);
+        else
+          mask = 0;
+        x_walls = x_walls | mask;
+        walls[(x_coord + 9)] = x_walls;
+      }
       break;
     default:
       Serial.println("Heading error");

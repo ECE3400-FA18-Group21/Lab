@@ -34,16 +34,16 @@ void setup() {
 void loop() {
   byte received;
   maze.printInfo();
-  maze.advanceIntersection(false, false, true);
+  maze.advanceIntersection(false, false, false); // Facing South
   maze.printInfo();
   maze.turnLeft();
-  maze.advanceIntersection(true, true, true);
+  maze.advanceIntersection(false, false, false); // Facing East
   maze.printInfo();
   maze.turnLeft();
-  maze.advanceIntersection(true, true, true);
+  maze.advanceIntersection(false, false, false); // Facing North
   maze.printInfo();
   maze.turnLeft();
-  maze.advanceIntersection(true, true, true);
+  maze.advanceIntersection(true, true, true); // Facing West
   maze.printInfo();
   while(true);
 //  byte to_send = 5;
