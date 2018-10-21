@@ -1,9 +1,9 @@
 /*
-   @date: 09.28.2018
+   @date: 10.21.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Benchmark Sensors
+   Base Station Program - Lab3
 */
 #include <Arduino.h>
 
@@ -19,7 +19,7 @@ class Maze {
                      // x coordinate on the grid was visited. Will have 9 entries, so whole
                      // array takes 18 bytes.
                      
-    byte walls[]; // Wall map representation and visited intersections
+    byte walls[324]; // Wall map representation and visited intersections
   public:
     Maze();
     /*
