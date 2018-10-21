@@ -73,7 +73,50 @@ byte Maze::getY() {
 }
 
 String Maze::getGUIMessage(byte x, byte y) {
+  //x, y are raster positions
+  bool north = walls[y] & (0x80 >> x);
+  bool south = walls[y+1] & (0x80 >> x);
+  bool west = walls[x+9] & (0x80 >> y);
+  bool east = walls[x+10] & 0x80 >> y);
 
+  Serial.print(y);
+  Serial.print(",");
+  Serial.print(x);
+  Serial.print(",");
+  if (north) {
+    Serial.print("north=true");
+    Serial.print(",");
+  }
+  else {
+    Serial.print("north=false");
+    Serial.print(",");
+  }
+  
+  if (south) {
+    Serial.print("south=true");
+    Serial.print(",");
+  }
+  else {
+    Serial.print("south=false");
+    Serial.print(",");
+  }
+  
+  if (west) {
+    Serial.print("west=true");
+    Serial.print(",");
+  }
+  else {
+    Serial.print("west=false");
+    Serial.print(",");
+  }
+  
+  if (east) {
+    Serial.println("east=true");
+  }
+  else {
+    Serial.println("east=false");
+  }
+  
 }
 
 void Maze::printInfo() {

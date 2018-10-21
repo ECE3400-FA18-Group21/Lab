@@ -6,13 +6,8 @@
  * Used to complete Lab 3 
  */
 
-void setup()
-{
-  
-  
-}
 
 void loop()
 {
-  
+   
 }
