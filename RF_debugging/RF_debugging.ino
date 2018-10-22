@@ -44,16 +44,19 @@ void setup(){
 
   // TRANSMITTER SETUP
   if(radioNumber==1) {
-    radio.openWritingPipe(addresses[0]);        
+    radio.openWritingPipe(addresses[1]);        // Both radios listen on the same pipes by default, but opposite addresses
+    radio.openReadingPipe(1,addresses[0]);      // Open a reading pipe on address 0, pipe 1  
     radio.stopListening();
   }
   // RECEIVER SETUP
   else {
-    radio.openReadingPipe(1,addresses[0]);      // Open a reading pipe on address 0, pipe 1
+    radio.openWritingPipe(addresses[0]);
+    radio.openReadingPipe(1,addresses[1]);
     radio.startListening();                     // Start listening  
     radio.writeAckPayload(1,&counter,1);        // Pre-load an ack-paylod into the FIFO buffer for pipe 1
   }
 }
+
 void loop(void) {
     //----------------------------------------------------------------------------------------------------//
     //                              TRANSMITTER - On Basestation                                          //
