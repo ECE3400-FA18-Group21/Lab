@@ -26,8 +26,6 @@ int readQD(int pin) {
   long time = micros();
   while((digitalRead(pin) == HIGH) && (micros()-time<3000));
   int diff = micros() - time;
-  if(pin ==3)
-  Serial.println(diff);
   return diff;
 }
 //Digital read threshold function
@@ -36,7 +34,6 @@ unsigned int * checkSensorsDigital() {
   sensorValuesDigital[0] = readQD(2);
   sensorValuesDigital[1] = readQD(3);
   sensorValuesDigital[2] = readQD(4);
-  sensorValuesDigital[3] = readQD(10);
   
   for (unsigned int i = 0; i < NUM_SENSORS_DIGITAL; i++) {
     if (sensorValuesDigital[i] < THRESHOLD_DIGITAL)

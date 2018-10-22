@@ -317,22 +317,22 @@ String Maze::getGUIMessage(byte x, byte y) {
 }
 
 void Maze::printInfo() {
-  Serial.println("Maze Info:");
-  Serial.print("Current X Position: ");
-  Serial.println(getX());
-  Serial.print("Current Y Position: ");
-  Serial.println(getY());
-  Serial.print(" Current Heading: ");
-  if (heading == 0)
-    Serial.println("North");
-  else if (heading == 1)
-    Serial.println("East");
-  else if (heading == 2)
-    Serial.println("South");
-  else if (heading == 3)
-    Serial.println("West");
-  else
-    Serial.println("ERROR! Heading was not in range [0-3]");
+//  Serial.println("Maze Info:");
+//  Serial.print("Current X Position: ");
+//  Serial.println(getX());
+//  Serial.print("Current Y Position: ");
+//  Serial.println(getY());
+//  Serial.print(" Current Heading: ");
+//  if (heading == 0)
+//    Serial.println("North");
+//  else if (heading == 1)
+//    Serial.println("East");
+//  else if (heading == 2)
+//    Serial.println("South");
+//  else if (heading == 3)
+//    Serial.println("West");
+//  else
+//    Serial.println("ERROR! Heading was not in range [0-3]");
 
 
   /* Print ASCII Art Map */
@@ -374,15 +374,15 @@ void Maze::printInfo() {
   //  to_print = String(to_print + "|");
   //  Serial.println(to_print);
 
-  // Print raw walls values
-  Serial.print(" ");
-  for (byte x = 9; x < 18; x++) {
-    Serial.print(walls[x]);
-    Serial.print(" ");
-  }
-  Serial.println("");
-  for (byte x = 0; x < 9; x++) {
-    Serial.println(walls[x]);
-  }
+//  // Print raw walls values
+//  Serial.print(" ");
+//  for (byte x = 9; x < 18; x++) {
+//    Serial.print(walls[x]);
+//    Serial.print(" ");
+//  }
+//  Serial.println("");
+//  for (byte x = 0; x < 9; x++) {
+//    Serial.println(walls[x]);
+//  }
 
 }

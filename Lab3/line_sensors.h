@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #define NUM_SENSORS_ANALOG      3    //number of analog sensors used
-#define NUM_SENSORS_DIGITAL     4    //number of digital sensors used 
+#define NUM_SENSORS_DIGITAL     3    //number of digital sensors used 
 #define THRESHOLD_ANALOG        500  //Threshold for line sensing
 #define THRESHOLD_DIGITAL       100 //Threshold for line sensing
 

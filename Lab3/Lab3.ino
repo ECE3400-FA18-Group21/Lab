@@ -21,6 +21,8 @@ bool BEGIN_OPERATIONS = false;
 
 bool wall_detected = false;
 
+int i =0;
+
 void setup() {
   Serial.begin(9600);
 
@@ -33,6 +35,19 @@ void setup() {
   RF24_tx_setup(radio);
 }
 
+void loops() {
+  Serial.println(i);
+  send_turn_left(radio);
+  send_turn_right(radio);
+  send_advance_intersection(radio, true, false, true);
+  bool microphone_detection = detect_660hz();
+  bool ir = detect_6080hz();
+  //moveForward(servo_L, servo_R);
+  //unsigned int * sensorStatus = checkSensorsDigital();
+  digitalWrite(8, HIGH);
+  i++;
+  delay(500);
+}
 void loop() {
   while (!BEGIN_OPERATIONS) {
     unsigned int * sensorStatus = checkSensorsDigital();
@@ -49,24 +64,26 @@ void loop() {
     else
       digitalWrite(8, LOW);
   }
+  //send_advance_intersection(radio, true, false, true);
   while (BEGIN_OPERATIONS) {
-    Serial.println(read_range_sensor(3));
     //Line tracking code
     unsigned int * sensorStatus = checkSensorsDigital();
-    Serial.println(sensorStatus[0]);
     if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ) { // wall detected at intersection!
       if (detect_wall_6in(1)){
+        Serial.println(F("Turn Left Intersection"));
         turnLeftIntersection(servo_L, servo_R);
         send_advance_intersection(radio, true, false, true);
         send_turn_left(radio);
       }
       else{
+        Serial.println(F("Turn Right Intersection"));
         turnRightIntersection(servo_L, servo_R);
         send_advance_intersection(radio, true, false, false);
         send_turn_right(radio);
       }
     }
     else if (detect_wall_3in(3)) {
+      Serial.println(F("Turn Left Evasive"));
       turnLeft(servo_L, servo_R);
       send_turn_left(radio);
     }

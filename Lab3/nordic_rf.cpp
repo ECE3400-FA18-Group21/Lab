@@ -27,18 +27,20 @@ void RF24_tx_setup(RF24 radio) {
 
 /* Send byte array of length n */
 void RF24_tx_send(RF24 radio, byte *msg) {
-  Serial.println("Trying to send");
-  if (!radio.write( msg, sizeof(byte))) {
+  Serial.println(F("Trying to send"));
+  if (!radio.write( msg, sizeof(msg))) {
     Serial.println(F("failed"));
   }
+  else
+    Serial.println(F("success"));
 }
 void send_turn_left(RF24 radio){
   byte instruction = 0b00000000;
-  RF24_tx_send(radio, instruction);
+  RF24_tx_send(radio, &instruction);
 }
 void send_turn_right(RF24 radio){
   byte instruction = 0b00000001;
-  RF24_tx_send(radio, instruction);  
+  RF24_tx_send(radio, &instruction);  
 }
 void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool rightWall){
   byte instruction = 0b00000010;
@@ -48,7 +50,7 @@ void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool r
     instruction = instruction | 0b00001000;
   if(frontWall)
     instruction = instruction | 0b00010000;
-  RF24_tx_send(radio, instruction); 
+  RF24_tx_send(radio, &instruction); 
 }
 
 //--------------------------------------------------------//
@@ -70,8 +72,8 @@ byte RF24_rx_read(RF24 radio) {
   byte pipe, msg;                          // Declare variables for the pipe and the byte received
   while ( radio.available(&pipe)) {            // Read pipe 1
     radio.read( &msg, 1 );
-    Serial.print(F("Loaded next response "));
-    Serial.println(msg);
+    //Serial.print(F("Loaded next response "));
+    //Serial.println(msg);
   }
   return msg;
 }

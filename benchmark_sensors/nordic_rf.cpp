@@ -28,17 +28,17 @@ void RF24_tx_setup(RF24 radio) {
 /* Send byte array of length n */
 void RF24_tx_send(RF24 radio, byte *msg) {
   Serial.println("Trying to send");
-  if (!radio.write( msg, sizeof(byte))) {
+  if (!radio.write( msg, 1)) {
     Serial.println(F("failed"));
   }
 }
 void send_turn_left(RF24 radio){
   byte instruction = 0b00000000;
-  RF24_tx_send(radio, instruction);
+  RF24_tx_send(radio, &instruction);
 }
 void send_turn_right(RF24 radio){
   byte instruction = 0b00000001;
-  RF24_tx_send(radio, instruction);  
+  RF24_tx_send(radio, &instruction);  
 }
 void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool rightWall){
   byte instruction = 0b00000010;
@@ -48,7 +48,7 @@ void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool r
     instruction = instruction | 0b00001000;
   if(frontWall)
     instruction = instruction | 0b00010000;
-  RF24_tx_send(radio, instruction); 
+  RF24_tx_send(radio, &instruction); 
 }
 
 //--------------------------------------------------------//
