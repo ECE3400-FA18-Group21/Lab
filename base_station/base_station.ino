@@ -27,7 +27,7 @@ void loop() {
   //---------------------------------------------------//
   byte received = 0;
   received = RF24_rx_read(radio);
-//  Serial.println(received);
+  Serial.println(received);
   
 
   //---------------------------------------------------//

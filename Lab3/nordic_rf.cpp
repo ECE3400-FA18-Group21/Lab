@@ -5,7 +5,6 @@
    @team: 21
    Base Station Program - Lab 3
 */
-
 #include "nordic_rf.h"
 #include <Arduino.h>
 
