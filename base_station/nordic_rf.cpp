@@ -46,7 +46,7 @@ void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool r
     instruction = instruction | 0b00000100;
   if(leftWall)
     instruction = instruction | 0b00001000;
-  if(frontWall)
+  if(rightWall)
     instruction = instruction | 0b00010000;
   RF24_tx_send(radio, instruction); 
 }
