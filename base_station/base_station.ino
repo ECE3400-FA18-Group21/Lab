@@ -25,8 +25,10 @@ void loop() {
   //---------------------------------------------------//
   //                RADIO COMMUNICATION                //
   //---------------------------------------------------//
-  byte received;
+  byte received = 0;
   received = RF24_rx_read(radio);
+//  Serial.println(received);
+  
 
   //---------------------------------------------------//
   //         PARSE INSTRUCTIONS & UPDATE MAZE          //
