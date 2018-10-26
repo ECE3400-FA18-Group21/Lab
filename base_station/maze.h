@@ -52,7 +52,7 @@ class Maze {
        getGUIMessage(x, y) returns the message to send to the basestation GUI based on
        x and y coordinate
     */
-    String getGUIMessage(byte x, byte y);
+    void getGUIMessage(byte x, byte y);
 
     /*
        printInfo() prints out the current maze representation state to the serial monitor

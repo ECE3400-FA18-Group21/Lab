@@ -8,6 +8,7 @@
  
 #include "move_commands.h"
 #include "ir_rangefinder.h"
+#include "line_sensors.h"
 
 void stopMotors(Servo servo_L, Servo servo_R){
   servo_R.write(90);
@@ -35,17 +36,24 @@ void adjustLeft(Servo servo_L, Servo servo_R, int amount){
 }
 
 void turnRight(Servo servo_L, Servo servo_R){
+  unsigned int * sensorStatus = checkSensorsDigital();
   servo_R.write(180);
   servo_L.write(180);
-  delay(550);
+  while(!sensorStatus[1]){sensorStatus = checkSensorsDigital();};
+  delay(50);
+  while(sensorStatus[1]){sensorStatus = checkSensorsDigital();};
+  
   stopMotors(servo_L, servo_R);
 }
 
 
 void turnLeft(Servo servo_L, Servo servo_R){
+  unsigned int * sensorStatus = checkSensorsDigital();
   servo_R.write(0);
   servo_L.write(0);
-  delay(530);
+  while(!sensorStatus[1]){sensorStatus = checkSensorsDigital();};
+  delay(50);
+  while(sensorStatus[1]){sensorStatus = checkSensorsDigital();};
   stopMotors(servo_L, servo_R);
 }
 

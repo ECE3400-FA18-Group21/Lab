@@ -27,37 +27,39 @@ void loop() {
   //---------------------------------------------------//
   byte received = 0;
   received = RF24_rx_read(radio);
-  Serial.println(received);
-  
 
   //---------------------------------------------------//
   //         PARSE INSTRUCTIONS & UPDATE MAZE          //
   //---------------------------------------------------//
-  //int instructions[8];
-//  splitByte(received, instructions);
-//
-//  Command Type = 00
-//  if(instructions[1]==0 && instructions[0]==0){
-//    maze.turnLeft();
-//  }
-//  //Command Type = 01
-//  else if(instructions[1]==0 && instructions[0]==1){
-//    maze.turnRight();
-//  } 
-//  //Command Type = 10
-//  else if(instructions[1]==1 && instructions[0]==0){
-//      bool frontWall = convert_Int_to_Bool(instructions[2]);
-//      bool leftWall = convert_Int_to_Bool(instructions[3]);
-//      bool rightWall = convert_Int_to_Bool(instructions[4]);
-//      maze.advanceIntersection(frontWall, leftWall, rightWall);
-//  }
-//  else
-//    Serial.println("Invalid command");
+  int instructions[8];
+  splitByte(received, instructions);
+
+  //Command Type = 00
+  if(instructions[1]==0 && instructions[0]==0){
+    maze.turnLeft();
+    //Serial.println("Turn Left = 00");
+  }
+  //Command Type = 01
+  else if(instructions[1]==0 && instructions[0]==1){
+    maze.turnRight();
+    //Serial.println("Turn Right = 01");
+  } 
+  //Command Type = 10
+  else if(instructions[1]==1 && instructions[0]==0){
+      bool frontWall = convert_Int_to_Bool(instructions[2]);
+      bool leftWall = convert_Int_to_Bool(instructions[3]);
+      bool rightWall = convert_Int_to_Bool(instructions[4]);
+      maze.advanceIntersection(frontWall, leftWall, rightWall);
+      //Serial.println("Advance Intersection = 10");
+  }
+  else
+    Serial.println("Invalid command");
   
   //---------------------------------------------------//
   //                     UPDATE GUI                    //
   //---------------------------------------------------//
-  //maze.getGUIMessage(maze.getX(), maze.getY());  
+  maze.getGUIMessage(maze.getX(), maze.getY());  
+  delay(100);
 }
 
 //Breaks a byte into an 8-element int array by bit

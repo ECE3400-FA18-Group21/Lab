@@ -38,5 +38,5 @@ void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool r
 /* Set up RF24 transceiver for receive mode on Base Station */
 void RF24_rx_setup(RF24 radio);
 
-/* Read data if available */
+/* Read data if available- blocks if not */
 byte RF24_rx_read(RF24 radio);

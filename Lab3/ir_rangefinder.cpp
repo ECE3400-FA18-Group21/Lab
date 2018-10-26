@@ -6,7 +6,7 @@
  * Used to complete Milestone 2 documentation
  */
 #define VAL_6_INCH 100
-#define VAL_3_INCH 200
+#define VAL_3_INCH 300
  
 #include "ir_rangefinder.h"
 #include <Arduino.h>

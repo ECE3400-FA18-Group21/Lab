@@ -64,14 +64,15 @@ void RF24_rx_setup(RF24 radio) {
   radio.startListening();                       // Start listening
 }
 
-/* Read data if available */
+/* Read data if available- blocks if not */
 byte RF24_rx_read(RF24 radio) {
 
   byte pipe, msg;                          // Declare variables for the pipe and the byte received
+  while (!radio.available(&pipe));
   while ( radio.available(&pipe)) {            // Read pipe 1
     radio.read( &msg, 1 );
-    Serial.print(F("Loaded next response "));
-    Serial.println(msg);
+    //Serial.print(F("Loaded next response "));
+    //Serial.println(msg);
   }
   return msg;
 }

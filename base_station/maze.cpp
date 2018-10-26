@@ -230,7 +230,7 @@ byte Maze::getY() {
   return (pos & 0x0F);
 }
 
-String Maze::getGUIMessage(byte x, byte y) {
+void Maze::getGUIMessage(byte x, byte y) {
   bool north_bool;
   bool south_bool;
   bool west_bool;
