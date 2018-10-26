@@ -6,10 +6,22 @@
  * Lab 4
  */
 
-#include <Wire.h>
-#define OV7670_I2C_ADDRESS /*TODO: write this in hex (eg. 0xAB) */
+//NOTE - all values will be read in hexadecimal format. All addresses & write values should also be written in hex
 
-///////// Main Program //////////////
+#include <Wire.h>
+#define OV7670_I2C_ADDRESS = 0x15; //7 MSB from address = 0b0010101 in binary, 21 in decimal, 0x15 in hex
+/*
+ * 42 for write --> 0b00101010
+ * 43 for read  --> 0b00101011
+
+ * The address you give the Arduino I2C library should NOT include the LSB 
+ * That is, the read/write addresses you get from datasheet are 7 bit I2C addresses + 1 or a 0 depending on if it's a read or write address
+ * Just give the Arduino library the upper seven bits
+ */
+
+//---------------------------------------------------//
+//                    MAIN PROGRAM                   //
+//---------------------------------------------------//
 void setup() {
   Wire.begin();
   Serial.begin(9600);
@@ -18,18 +30,20 @@ void setup() {
   read_key_registers();
   
   delay(100);
-  
   // TODO: WRITE KEY REGISTERS
-  
+
+  set_color_matrix();
 }
 
 void loop(){
- }
+}
 
-
-///////// Function Definition //////////////
+//---------------------------------------------------//
+//              FUNCTION DEFINITIONS                 //
+//---------------------------------------------------//
 void read_key_registers(){
   /*TODO: DEFINE THIS FUNCTION*/
+  // You can also add something more intelligent to the routine called read_key_registers such that it automatically outputs what you have written
 }
 
 byte read_register_value(int register_address){
@@ -59,12 +73,10 @@ String OV7670_write(int start, const byte *pData, int size){
       return String(error);
     }
     return "no errors :)";
- }
-
+}
 String OV7670_write_register(int reg_address, byte data){
   return OV7670_write(reg_address, &data, 1);
- }
-
+}
 void set_color_matrix(){
     OV7670_write_register(0x4f, 0x80);
     OV7670_write_register(0x50, 0x80);
