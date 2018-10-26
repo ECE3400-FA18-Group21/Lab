@@ -1,7 +1,13 @@
+/*
+ * @date: 10.25.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ * Lab 4
+ */
+
 #include <Wire.h>
-
 #define OV7670_I2C_ADDRESS /*TODO: write this in hex (eg. 0xAB) */
-
 
 ///////// Main Program //////////////
 void setup() {
@@ -9,12 +15,12 @@ void setup() {
   Serial.begin(9600);
   
   // TODO: READ KEY REGISTERS
+  read_key_registers();
   
   delay(100);
   
   // TODO: WRITE KEY REGISTERS
   
-  read_key_registers();
 }
 
 void loop(){
