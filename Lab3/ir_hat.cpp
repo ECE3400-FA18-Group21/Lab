@@ -6,6 +6,7 @@
  * Used to complete Milestone 2 documentation
  */
 #define IR_THRESHOLD 100 // bin thresholding for 6.08 kHz signal
+#define IR_THRESHOLD_HARM 70 // bin 
 
 #include <Arduino.h>
 #include "ir_hat.h"
@@ -33,7 +34,7 @@ byte * get_fft_bins_ir(){
  */
 bool detect_6080hz(){
     byte * fft_log_out = get_fft_bins_ir();
-    if (fft_log_out[41] > IR_THRESHOLD && fft_log_out[42] > IR_THRESHOLD) //bins 41 & 42, but 0 based so subtract 1
+    if (fft_log_out[41] > IR_THRESHOLD && fft_log_out[42] > IR_THRESHOLD && fft_log_out[43] > IR_THRESHOLD && fft_log_out[84] > IR_THRESHOLD_HARM  && fft_log_out[85] > IR_THRESHOLD_HARM) //bins 41 & 42, but 0 based so subtract 1
         return true;
     else
         return false;
