@@ -1,5 +1,5 @@
 /*
- * @date: 10.25.2018
+ * @date: 10.28.2018
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
@@ -22,14 +22,12 @@ Servo servo_L;
 RF24 radio(9,10);
 Maze maze = Maze();
 
-int IR_COUNTER = 0;
 int MIC_COUNTER = 0;
-int MIC_THRESHOLD = 4;                //better value
-bool BEGIN_OPERATIONS = false;
-
-bool wall_detected = false;
-
+int MIC_THRESHOLD = 4;           //better value
 int i = 0;
+
+bool BEGIN_OPERATIONS = false;
+bool wall_detected = false;
 
 void setup() {
   Serial.begin(9600);
