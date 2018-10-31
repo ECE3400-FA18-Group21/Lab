@@ -60,16 +60,17 @@ wire [8:0] RESULT;
 reg W_EN;
 
 ///////* CREATE ANY LOCAL WIRES YOU NEED FOR YOUR PLL *///////
-wire CLK_24; 
-wire CLK_25;
-wire CLK_50; //PLL output clock, not same as CLOCK_50
+wire c0_sig, c1_sig, c2_sig;
+
 ///////* INSTANTIATE YOUR PLL HERE *///////
-PLL22	PLL22_inst (
+PLL21	PLL21_inst (
 	.inclk0 ( CLOCK_50 ),
-	.c0 ( CLK_24 ), //24 Mhz
-	.c1 ( CLK_25 ), //25 Mhz
-	.c2 ( CLK_50 )  //50 Mhz
+	.c0 ( c0_sig ), //24
+	.c1 ( c1_sig ), //25
+	.c2 ( c2_sig ) //50
 	);
+
+
 ///////* M9K Module *///////
 Dual_Port_RAM_M9K mem(
 	.input_data(pixel_data_RGB332),
@@ -77,14 +78,14 @@ Dual_Port_RAM_M9K mem(
 	.r_addr(READ_ADDRESS),
 	.w_en(W_EN),
 	.clk_W(CLOCK_50),
-	.clk_R(CLK_25), // DO WE NEED TO READ SLOWER THAN WRITE??
+	.clk_R(c1_sig), // DO WE NEED TO READ SLOWER THAN WRITE??
 	.output_data(MEM_OUTPUT)
 );
 
 ///////* VGA Module *///////
 VGA_DRIVER driver (
 	.RESET(VGA_RESET),
-	.CLOCK(CLK_25), //takes 25 MHz
+	.CLOCK(c1_sig),
 	.PIXEL_COLOR_IN(VGA_READ_MEM_EN ? MEM_OUTPUT : BLUE),
 	.PIXEL_X(VGA_PIXEL_X),
 	.PIXEL_Y(VGA_PIXEL_Y),
@@ -96,7 +97,7 @@ VGA_DRIVER driver (
 ///////* Image Processor *///////
 IMAGE_PROCESSOR proc(
 	.PIXEL_IN(MEM_OUTPUT),
-	.CLK(/*REPLACE THIS THE 25MHZ SIGNAL FROM YOUR PLL*/),
+	.CLK(c1_sig),
 	.VGA_PIXEL_X(VGA_PIXEL_X),
 	.VGA_PIXEL_Y(VGA_PIXEL_Y),
 	.VGA_VSYNC_NEG(VGA_VSYNC_NEG),
