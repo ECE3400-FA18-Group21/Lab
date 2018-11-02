@@ -23,8 +23,30 @@ input [9:0] VGA_PIXEL_X;
 input [9:0] VGA_PIXEL_Y;
 input			VGA_VSYNC_NEG;
 
-output [8:0] RESULT;
+reg [31:0] count;
 
+reg detect1;
+reg detect2;
+
+output reg [8:0] RESULT;
+
+always@(posedge CLK) begin
+	detect1 = VGA_VSYNC_NEG;
+	detect2 = detect1;
+	if (!detect1 && detect2) begin
+		RESULT[0] <= (count > 12672) ? 1 : 0; //if greater than half pixels red
+	end
+end
+
+
+always@(posedge CLK) begin
+	if (!detect1 && detect2)
+		count = 0;
+	else if(PIXEL_IN[7:6] >= PIXEL_IN[1:0])
+		count = count + 1;
+	else
+		count = count;
+end
 
 
 endmodule
