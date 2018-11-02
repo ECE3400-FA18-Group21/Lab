@@ -26,11 +26,12 @@ input 		          		CLOCK_50;
 //////////// GPIO_0, GPIO_0 connect to GPIO Default //////////
 output 		    [33:0]		GPIO_0_D;
 //////////// GPIO_0, GPIO_1 connect to GPIO Default //////////
-input 		    [33:20]		GPIO_1_D;
+input 		    [33:0]		GPIO_1_D;
 input 		     [1:0]		KEY;
 
 ///// PIXEL DATA /////
-reg [7:0]	pixel_data_RGB332 = 8'd0;
+wire [7:0]	pixel_data_RGB332;
+reg [7:0]	test_pixel;
 
 ///// READ/WRITE ADDRESS /////
 reg [14:0] X_ADDR;
@@ -53,39 +54,51 @@ reg			VGA_READ_MEM_EN;
 assign GPIO_0_D[5] = VGA_VSYNC_NEG;
 assign VGA_RESET = ~KEY[0];
 
+assign GPIO_0_D[33] = CLK_24;
+
+wire vsync;
+assign vsync = GPIO_1_D[3];
 ///// I/O for Img Proc /////
 wire [8:0] RESULT;
 
 /* WRITE ENABLE */
 reg W_EN;
+wire cycle;
+
+//always@(posedge GPIO_1_D[7]) begin
+//	W_EN <= cycle;
+//end
+always@(*) begin
+	W_EN = ~cycle;
+end
 
 ///////* CREATE ANY LOCAL WIRES YOU NEED FOR YOUR PLL *///////
-wire c0_sig, c1_sig, c2_sig;
+wire CLK_24, CLK_25, CLK_50;
 
 ///////* INSTANTIATE YOUR PLL HERE *///////
 PLL21	PLL21_inst (
 	.inclk0 ( CLOCK_50 ),
-	.c0 ( c0_sig ), //24
-	.c1 ( c1_sig ), //25
-	.c2 ( c2_sig ) //50
+	.c0 ( CLK_24 ),
+	.c1 ( CLK_25 ),
+	.c2 ( CLK_50 )
 	);
-
 
 ///////* M9K Module *///////
 Dual_Port_RAM_M9K mem(
 	.input_data(pixel_data_RGB332),
+//	.input_data(test_pixel),
 	.w_addr(WRITE_ADDRESS),
 	.r_addr(READ_ADDRESS),
 	.w_en(W_EN),
 	.clk_W(CLOCK_50),
-	.clk_R(c1_sig), // DO WE NEED TO READ SLOWER THAN WRITE??
+	.clk_R(CLK_25), // DO WE NEED TO READ SLOWER THAN WRITE??
 	.output_data(MEM_OUTPUT)
 );
 
 ///////* VGA Module *///////
 VGA_DRIVER driver (
 	.RESET(VGA_RESET),
-	.CLOCK(c1_sig),
+	.CLOCK(CLK_25),
 	.PIXEL_COLOR_IN(VGA_READ_MEM_EN ? MEM_OUTPUT : BLUE),
 	.PIXEL_X(VGA_PIXEL_X),
 	.PIXEL_Y(VGA_PIXEL_Y),
@@ -97,11 +110,23 @@ VGA_DRIVER driver (
 ///////* Image Processor *///////
 IMAGE_PROCESSOR proc(
 	.PIXEL_IN(MEM_OUTPUT),
-	.CLK(c1_sig),
+	.CLK(CLK_25),
 	.VGA_PIXEL_X(VGA_PIXEL_X),
 	.VGA_PIXEL_Y(VGA_PIXEL_Y),
 	.VGA_VSYNC_NEG(VGA_VSYNC_NEG),
 	.RESULT(RESULT)
+);
+
+assign GPIO_0_D[31] = RESULT[0];
+
+//Downsampler
+downsampler downsamp(
+	.reset(VGA_RESET),
+	.clk(GPIO_1_D[7]),
+	.href(GPIO_1_D[5]),
+	.rgb565({GPIO_1_D[23], GPIO_1_D[21], GPIO_1_D[19], GPIO_1_D[17], GPIO_1_D[15], GPIO_1_D[13], GPIO_1_D[11], GPIO_1_D[9]}),
+	.rgb332(pixel_data_RGB332),
+	.cycle(cycle)
 );
 
 
@@ -114,6 +139,50 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		else begin
 				VGA_READ_MEM_EN = 1'b1;
 		end
+end
+
+
+//Write test pattern to memory (to test_pixel)
+//always@(posedge CLOCK_50) begin
+//	if (VGA_RESET) begin
+//		X_ADDR <= 0;
+//		Y_ADDR <= 0;
+//	end
+//	else if (X_ADDR == (`SCREEN_WIDTH-1)) begin
+//		X_ADDR <= 0;
+//		if (Y_ADDR == (`SCREEN_HEIGHT-1)) begin
+//			Y_ADDR <= 0;
+//		end 
+//		else begin
+//			Y_ADDR <= Y_ADDR + 1;
+//		end
+//		test_pixel <= GREEN;
+//	end 
+//	else begin
+//		if (X_ADDR < 50) test_pixel <= GREEN;
+//		else if (X_ADDR < 120) test_pixel <= BLUE;
+//		else test_pixel <= RED;
+//		X_ADDR <= X_ADDR + 1;
+//		Y_ADDR <= Y_ADDR;
+//	end
+//end
+
+always@(posedge W_EN, posedge vsync) begin
+	if (vsync) begin
+		X_ADDR <= 0;
+		Y_ADDR <= 0;
+	end
+	else if (X_ADDR == (`SCREEN_WIDTH-1)) begin
+		X_ADDR <= 0;
+		if (Y_ADDR == (`SCREEN_HEIGHT-1)) 
+			Y_ADDR <= 0;
+		else
+			Y_ADDR <= Y_ADDR + 1;
+	end
+	else begin
+		X_ADDR <= X_ADDR + 1;
+		Y_ADDR <= Y_ADDR;
+	end
 end
 
 	
