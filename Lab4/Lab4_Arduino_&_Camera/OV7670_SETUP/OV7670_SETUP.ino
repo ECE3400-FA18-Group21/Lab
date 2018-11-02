@@ -30,50 +30,46 @@ void setup() {
   pinMode(FPGA_communication_pin, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
 
+  //RESET ALL REGISTERS 
+  OV7670_write_register(0x12, 0b10000000);
+  delay(100);
+  
   // TODO: READ KEY REGISTERS
   Serial.println("------------------------------------------------------------------");
   Serial.println("          INITIAL VALUES BEFORE WRITING TO REGISTERS              ");
-  Serial.println("------------------------------------------------------------------");
-  OV7670_write_register(0x12, 0b10000000);                             //reset all registers
+  Serial.println("------------------------------------------------------------------");                             
+  //READ & STORE
   read_key_registers();
   byte reset = read_register_value(0x12);
   byte res_scale_en = read_register_value(0x0C);
   byte ext_CLK = read_register_value(0x11);
-  byte qcif = read_register_value(0x12);
+  byte qcif_and_color_bar = read_register_value(0x12);
   byte rgb565 = read_register_value(0x40);
-  byte color_bar_en = read_register_value(0x12);
   byte dsp_color_bar_en = read_register_value(0x42);
-  byte mirror_image = read_register_value(0x1E);
-  byte vert_flip_image = read_register_value(0x1E);
-  //byte auto_gain_ceil = read_register_value(0x00);
-  delay(100);
+  byte mirror_and_vert_flip = read_register_value(0x1E);
 
   //Assign modified values to variables to be written to registers
-  reset            |= 0b10000000;
-  res_scale_en     |= 0b00001000;
-  ext_CLK          |= 0b01000000;
-  qcif             |= 0b00001100;
-  rgb565           |= 0b00001000;
-  color_bar_en     |= 0b00000010;
-  dsp_color_bar_en |= 0b00001000;
-  mirror_image     |= 0b00100000;
-  vert_flip_image  |= 0b00010000;
-  //auto_gain_ceil   |= 0x00110000;
+  reset                   |=    0b10000000;
+  res_scale_en            |=    0b00001000;
+  ext_CLK                 |=    0b01000000;
+  qcif_and_color_bar      |=    0b00001110;
+  rgb565                  |=    0b00010000;
+  dsp_color_bar_en        |=    0b00001000;
+  mirror_and_vert_flip    |=    0b00110000;
 
-  // TODO: WRITE KEY REGISTERS
-  OV7670_write_register(0x12, reset);                             //reset all registers
+  //WRITE KEY REGISTERS 
+  OV7670_write_register(0x12, reset);
   delay(100);
-  OV7670_write_register(0x0C, res_scale_en);                      //enable manual resolution scaling
-  OV7670_write_register(0x11, ext_CLK);                           //use external clock as internal clock
-  OV7670_write_register(0x12, (qcif | color_bar_en));
+  OV7670_write_register(0x0C, res_scale_en); 
+  OV7670_write_register(0x0C, res_scale_en);                      
+  OV7670_write_register(0x11, ext_CLK);                
+  OV7670_write_register(0x12, qcif_and_color_bar);
   OV7670_write_register(0x40, rgb565);
   OV7670_write_register(0x42, dsp_color_bar_en);
-  OV7670_write_register(0x1E, (mirror_image | vert_flip_image));
-  //OV7670_write_register(0x14, auto_gain_ceil);
+  OV7670_write_register(0x1E, mirror_and_vert_flip);
 
   set_color_matrix();
 
-  // TODO: READ KEY REGISTERS
   Serial.println("");
   Serial.println("------------------------------------------------------------------");
   Serial.println("                 AFTER WRITING TO REGISTERS                       ");
@@ -83,7 +79,7 @@ void setup() {
   Serial.println("------------------------------------------------------------------");
   Serial.println("                           NOTES                                  ");
   Serial.println("------------------------------------------------------------------");
-  Serial.println("Reset, Color Bar Enable, and DSP Color Bar Enable are the SAME registers");
+  Serial.println("Reset, Color Bar Enable, and QCIF are the SAME registers");
   Serial.println("Mirror Image and Vertically Flip Image are the SAME registers");
 }
 void loop(){
@@ -178,15 +174,9 @@ void read_key_registers() {
   Serial.print("DSP color bar enable = ");
   Serial.print(read_register_value(0x42), BIN);
   Serial.println("");
-  Serial.print("Mirror image = ");
+  Serial.print("Mirror & vertically flip = ");
   Serial.print(read_register_value(0x1E), BIN);
   Serial.println("");
-  Serial.print("Vertically flip image = ");
-  Serial.print(read_register_value(0x1E), BIN);
-  Serial.println("");
-  //Serial.print("Automatic gain ceiling = ");
-  //Serial.print(read_register_value(0x14), BIN);
-  //Serial.println("");
 }
 byte read_register_value(int register_address) {
   byte data = 0;
