@@ -6,240 +6,35 @@
    Lab 4
 */
 
-//NOTE - all values will be read in hexadecimal format. All addresses & write values should also be written in hex
-
+/**NOTE - all values will be read in hexadecimal format. All addresses & write values should also be written in hex**/
 #include <Wire.h>
-#define OV7670_I2C_ADDRESS 0x21
-/*
-   0x42 for write
-   0x43 for read
+#include <Arduino.h>
+#include "camera.h"
+#include "FPGA_to_Arduino.h"
 
-   The address you give the Arduino I2C library should NOT include the LSB
-   That is, the read/write addresses you get from datasheet are 7 bit I2C addresses + 1 or a 0 depending on if it's a read or write address
-   Just give the Arduino library the upper seven bits
-*/
+int FPGA_comms_pin1 = 5; 
+int FPGA_comms_pin2 = 6;
+int FPGA_comms_pin3 = 7;
 
-int FPGA_communication_pin = 5;
-
-//---------------------------------------------------//
-//                    MAIN PROGRAM                   //
-//---------------------------------------------------//
-void setup() {
-  Wire.begin();
+void setup(){
   Serial.begin(9600);
-  pinMode(FPGA_communication_pin, INPUT);
+  pinMode(FPGA_comms_pin1, INPUT);
+  pinMode(FPGA_comms_pin2, INPUT);
+  pinMode(FPGA_comms_pin3, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  //RESET ALL REGISTERS 
-  OV7670_write_register(0x12, 0b10000000);
-  delay(100);
-  
-  // TODO: READ KEY REGISTERS
-  Serial.println("------------------------------------------------------------------");
-  Serial.println("          INITIAL VALUES BEFORE WRITING TO REGISTERS              ");
-  Serial.println("------------------------------------------------------------------");                             
-  //READ & STORE
-  read_key_registers();
-  byte reset = read_register_value(0x12);
-  byte res_scale_en = read_register_value(0x0C);
-  byte ext_CLK = read_register_value(0x11);
-  byte qcif_and_color_bar = read_register_value(0x12);
-  byte rgb565 = read_register_value(0x40);
-  byte dsp_color_bar_en = read_register_value(0x42);
-  byte mirror_and_vert_flip = read_register_value(0x1E);
-
-  //Assign modified values to variables to be written to registers
-  reset                   |=    0b10000000;
-  res_scale_en            |=    0b00001000;
-  ext_CLK                 |=    0b01000000;
-  qcif_and_color_bar      |=    0b00001110;
-  rgb565                  |=    0b00010000;
-  dsp_color_bar_en        |=    0b00001000;
-  mirror_and_vert_flip    |=    0b00110000;
-
-  //WRITE KEY REGISTERS 
-  OV7670_write_register(0x12, reset);
-  delay(100);
-  OV7670_write_register(0x0C, res_scale_en); 
-  OV7670_write_register(0x0C, res_scale_en);                      
-  OV7670_write_register(0x11, ext_CLK);                
-  OV7670_write_register(0x12, qcif_and_color_bar);
-  OV7670_write_register(0x40, rgb565);
-  OV7670_write_register(0x42, dsp_color_bar_en);
-  OV7670_write_register(0x1E, mirror_and_vert_flip);
-
-  set_color_matrix();
-
-  Serial.println("");
-  Serial.println("------------------------------------------------------------------");
-  Serial.println("                 AFTER WRITING TO REGISTERS                       ");
-  Serial.println("------------------------------------------------------------------");
-  read_key_registers();
-  delay(100);
-  Serial.println("------------------------------------------------------------------");
-  Serial.println("                           NOTES                                  ");
-  Serial.println("------------------------------------------------------------------");
-  Serial.println("Reset, Color Bar Enable, and QCIF are the SAME registers");
-  Serial.println("Mirror Image and Vertically Flip Image are the SAME registers");
+  //setup_camera();
 }
 void loop(){
-}
+  
+  //Sends 1 bit [0 (blue) or 1 (red)] over 1 single wire
+  int value = digitalRead(FPGA_comms_pin1);
+  one_bit_color_detection(value);
 
-void loops1() {
-  int value = digitalRead(FPGA_communication_pin);
-  if (value) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println("------------------------------------------------------------------");
-    Serial.println("                           RED DETECTED                           ");
-    Serial.println("------------------------------------------------------------------");
-  }
-  else {
-    digitalWrite(LED_BUILTIN, LOW);
-    Serial.println("------------------------------------------------------------------");
-    Serial.println("                          BLUE DETECTED                           ");
-    Serial.println("------------------------------------------------------------------");
-  }
-}
 
-void loops() {
-  //---------------------------------------------------//
-  //               SERIAL COMMUNICATION                //
-  //---------------------------------------------------//
-  byte received = 0;
-  if(Serial.available()) {
-    received = Serial.read();
-  }
-
-  //---------------------------------------------------//
-  //         PARSE INSTRUCTIONS & UPDATE MAZE          //
-  //---------------------------------------------------//
-  int instructions[8];
-  splitByte(received, instructions);
-
-  //Command Type = 0000   --> no treasure
-  if (instructions[0]==0) {
-    Serial.println("No treasure detected");
-  }
-  //Command Type = 0001   --> Red-Triangle
-  else if (instructions[3]==0 && instructions[2]==0 && instructions[1]==0 && instructions[0]==1) {
-    Serial.println("Red Triangle Treasure detected");
-  }
-  //Command Type = 0011   --> Blue-Triangle
-  else if (instructions[3]==0 && instructions[2]==0 && instructions[1]==1 && instructions[0]==1) {
-    Serial.println("Blue Triangle Treasure detected");
-  }
-  //Command Type = 0101   --> Red-Square
-  else if (instructions[3]==0 && instructions[2]==1 && instructions[1]==0 && instructions[0]==1) {
-    Serial.println("Red Square Treasure detected");
-  }
-  //Command Type = 0111   --> Blue-Square
-  else if (instructions[3]==0 && instructions[2]==1 && instructions[1]==1 && instructions[0]==1) {
-    Serial.println("Blue Square Treasure detected");
-  }
-  //Command Type = 1001   --> Red-Circle
-  else if (instructions[3]==1 && instructions[2]==0 && instructions[1]==0 && instructions[0]==1) {
-    Serial.println("Red Circle Treasure detected");
-  }
-  //Command Type = 1011   --> Blue-Circle
-  else if (instructions[3]==1 && instructions[2]==0 && instructions[1]==1 && instructions[0]==1) {
-    Serial.println("Blue Circle Treasure detected");
-  }
-  else
-    Serial.println("Invalid command");
-}
-
-//---------------------------------------------------//
-//              FUNCTION DEFINITIONS                 //
-//---------------------------------------------------//
-void read_key_registers() {
-  /*TODO: DEFINE THIS FUNCTION*/
-  Serial.print("Reset register = ");
-  Serial.print(read_register_value(0x12), BIN);
-  Serial.println("");
-  Serial.print("Enable manual resolution scaling = ");
-  Serial.print(read_register_value(0x0C), BIN);
-  Serial.println("");
-  Serial.print("Use external clock as internal clock = ");
-  Serial.print(read_register_value(0x11), BIN);
-  Serial.println("");
-  Serial.print("QCIF = ");
-  Serial.print(read_register_value(0x12), BIN);
-  Serial.println("");
-  Serial.print("RGB565 = ");
-  Serial.print(read_register_value(0x40), BIN);
-  Serial.println("");
-  Serial.print("Color bar enable = ");
-  Serial.print(read_register_value(0x12), BIN);
-  Serial.println("");
-  Serial.print("DSP color bar enable = ");
-  Serial.print(read_register_value(0x42), BIN);
-  Serial.println("");
-  Serial.print("Mirror & vertically flip = ");
-  Serial.print(read_register_value(0x1E), BIN);
-  Serial.println("");
-}
-byte read_register_value(int register_address) {
-  byte data = 0;
-  Wire.beginTransmission(OV7670_I2C_ADDRESS);
-  Wire.write(register_address);
-  Wire.endTransmission();
-  Wire.requestFrom(OV7670_I2C_ADDRESS, 1);
-  while (Wire.available() < 1);
-  data = Wire.read();
-  return data;
-}
-
-String OV7670_write(int start, const byte *pData, int size) {
-  int n, error;
-  Wire.beginTransmission(OV7670_I2C_ADDRESS);
-  n = Wire.write(start);
-  if (n != 1) {
-    return "I2C ERROR WRITING START ADDRESS";
-  }
-  n = Wire.write(pData, size);
-  if (n != size) {
-    return "I2C ERROR WRITING DATA";
-  }
-  error = Wire.endTransmission(true);
-  if (error != 0) {
-    return String(error);
-  }
-  return "no errors :)";
-}
-String OV7670_write_register(int reg_address, byte data) {
-  return OV7670_write(reg_address, &data, 1);
-}
-void set_color_matrix() {
-  OV7670_write_register(0x4f, 0x80);
-  OV7670_write_register(0x50, 0x80);
-  OV7670_write_register(0x51, 0x00);
-  OV7670_write_register(0x52, 0x22);
-  OV7670_write_register(0x53, 0x5e);
-  OV7670_write_register(0x54, 0x80);
-  OV7670_write_register(0x56, 0x40);
-  OV7670_write_register(0x58, 0x9e);
-  OV7670_write_register(0x59, 0x88);
-  OV7670_write_register(0x5a, 0x88);
-  OV7670_write_register(0x5b, 0x44);
-  OV7670_write_register(0x5c, 0x67);
-  OV7670_write_register(0x5d, 0x49);
-  OV7670_write_register(0x5e, 0x0e);
-  OV7670_write_register(0x69, 0x00);
-  OV7670_write_register(0x6a, 0x40);
-  OV7670_write_register(0x6b, 0x0a);
-  OV7670_write_register(0x6c, 0x0a);
-  OV7670_write_register(0x6d, 0x55);
-  OV7670_write_register(0x6e, 0x11);
-  OV7670_write_register(0x6f, 0x9f);
-  OV7670_write_register(0xb0, 0x84);
-}
-//Breaks a byte into an 8-element int array by bit
-void splitByte(byte b, int variable[8]) {
-  byte i;
-
-  for (i = 0; i < 8; ++i )
-  {
-    variable[i] = b & 1;
-    b = b >> 1;
-  }
+  //Sends 3 bits over 3 single wires
+  int bit0 = digitalRead(FPGA_comms_pin1);
+  int bit1 = digitalRead(FPGA_comms_pin2);
+  int bit2 = digitalRead(FPGA_comms_pin2);
+  parallel_communication(bit2, bit1, bit0);
 }
