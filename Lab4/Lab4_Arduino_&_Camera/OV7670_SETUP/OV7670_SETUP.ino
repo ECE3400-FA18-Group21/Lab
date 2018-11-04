@@ -15,6 +15,7 @@
 int FPGA_comms_pin1 = 5; 
 int FPGA_comms_pin2 = 6;
 int FPGA_comms_pin3 = 7;
+bool testMode = true;
 
 void setup(){
   Serial.begin(9600);
@@ -23,9 +24,13 @@ void setup(){
   pinMode(FPGA_comms_pin3, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  //setup_camera();
+  setup_camera(testMode);
 }
 void loop(){
+  
+}
+
+void loops(){
   
   //Sends 1 bit [0 (blue) or 1 (red)] over 1 single wire
   int value = digitalRead(FPGA_comms_pin1);

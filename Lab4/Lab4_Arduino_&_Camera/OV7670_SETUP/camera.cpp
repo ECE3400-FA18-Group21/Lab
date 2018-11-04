@@ -14,14 +14,16 @@
    • The address you give the Arduino I2C library should NOT include the LSB
 */
 
-void setup_camera() {
+void setup_camera(bool testMode) {
   Wire.begin();
 
   //--------------------------------------------------------------------------------//
   //                          RESET ALL REGISTERS                                   //
   //--------------------------------------------------------------------------------// 
-  //This is used because during testing, we set the registers multiple times 
-  OV7670_write_register(0x12, 0b10000000);
+  //This is used because during testing, we set the registers multiple times
+  if(testMode){ 
+    OV7670_write_register(0x12, 0b10000000);
+  }
   delay(100);
   
   Serial.println("------------------------------------------------------------------");
@@ -32,15 +34,24 @@ void setup_camera() {
   //--------------------------------------------------------------------------------//
   //                                WRITE TO REGISTERS                              //
   //--------------------------------------------------------------------------------//
-  OV7670_write_register(0x12, 0x80); //COM7,    SCCB Register Reset
+  OV7670_write_register(0x12, 0x80);   //COM7,    SCCB Register Reset
   delay(100);
-  OV7670_write_register(0x12, 0x0e); //COM7,    QCIF, RGB output, Color bar enable
-  OV7670_write_register(0x0c, 0x08); //COM3,    Enable scaling
-  OV7670_write_register(0x14, 0x01); //COM9,    Automatic gain ceiling, freeze AGC/AEC
-  OV7670_write_register(0x40, 0xd0); //COM15,   RGB 565 Output
-  OV7670_write_register(0x42, 0x08); //COM17,   DSP color bar enable
-  OV7670_write_register(0x11, 0xc0); //CLKRC,   Use internal clock as external clock
-  OV7670_write_register(0x1e, 0x30); //MVFP,    Mirror & VFlip enable
+  if(testMode)
+    OV7670_write_register(0x12, 0x0e); //COM7,    QCIF, RGB output, Color bar enable
+  else{
+    OV7670_write_register(0x12, 0x0c); //COM7,    QCIF, RGB output, Color bar disable
+  }
+  OV7670_write_register(0x0c, 0x08);   //COM3,    Enable scaling
+  OV7670_write_register(0x14, 0x01);   //COM9,    Automatic gain ceiling, freeze AGC/AEC
+  OV7670_write_register(0x40, 0xd0);   //COM15,   RGB 565 Output
+  if(testMode) {
+    OV7670_write_register(0x42, 0x08); //COM17,   DSP color bar enable
+  }
+  else {
+    OV7670_write_register(0x42, 0x00); //COM17,   DSP color bar disable
+  }
+  OV7670_write_register(0x11, 0xc0);   //CLKRC,   Use internal clock as external clock
+  OV7670_write_register(0x1e, 0x30);   //MVFP,    Mirror & VFlip enable
 
   set_color_matrix();
 

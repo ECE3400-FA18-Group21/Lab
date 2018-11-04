@@ -11,7 +11,7 @@
 /**
  * Performs camera setup by writing to required registers
  */
-void setup_camera();
+void setup_camera(bool testMode);
 
 /**
  * Used as diagnostic tool
