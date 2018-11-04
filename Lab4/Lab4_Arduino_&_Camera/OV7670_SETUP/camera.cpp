@@ -8,7 +8,6 @@
 #define OV7670_I2C_ADDRESS 0x21
 #include <Wire.h>
 #include "camera.h"
-
 /*
    • Slave write address = 0x42
    • Slave read address  = 0x43
@@ -18,10 +17,10 @@
 void setup_camera() {
   Wire.begin();
 
-//--------------------------------------------------------------------------------//
-//                          RESET ALL REGISTERS                                   //
-//--------------------------------------------------------------------------------// 
-//This is used because during testing, we set the registers multiple times 
+  //--------------------------------------------------------------------------------//
+  //                          RESET ALL REGISTERS                                   //
+  //--------------------------------------------------------------------------------// 
+  //This is used because during testing, we set the registers multiple times 
   OV7670_write_register(0x12, 0b10000000);
   delay(100);
   
@@ -30,41 +29,18 @@ void setup_camera() {
   Serial.println("------------------------------------------------------------------");                             
   read_key_registers();
 
-//--------------------------------------------------------------------------------//
-//                     STORE INITIAL REGISTER VALUES                              //
-//--------------------------------------------------------------------------------//
-  byte COM7 = read_register_value(0x12);                  //SCCB Register Reset, QCIF, Color Bar Enable
-  byte COM3 = read_register_value(0x0C);                  //Enable scaling
-  byte COM9 = read_register_value(0x14);                  //Automatic Gain Ceiling
-  byte COM15 = read_register_value(0x40);                 //RGB565
-  byte COM17 = read_register_value(0x42);                 //DSP color bar enable
-  byte CLKRC = read_register_value(0x11);                 //Use external clock as internal clock
-  byte MVFP = read_register_value(0x1E);                  //Mirror & VFlip enable
-
-//--------------------------------------------------------------------------------//
-//                   ASSIGN MODIFIED VALUES TO VARIABLES                          //
-//--------------------------------------------------------------------------------//
-  byte RESET          =       0b10000000;
-  COM7               |=       0b00001110;
-  COM3               |=       0b00001000;
-  COM9                =       0b00000001;
-  COM15              |=       0b11010000;
-  COM17              |=       0b00001000;
-  CLKRC              |=       0b11000000;
-  MVFP               |=       0b00110000;
-
-//--------------------------------------------------------------------------------//
-//                                WRITE TO REGISTERS                              //
-//--------------------------------------------------------------------------------//
-  OV7670_write_register(0x12, RESET);
+  //--------------------------------------------------------------------------------//
+  //                                WRITE TO REGISTERS                              //
+  //--------------------------------------------------------------------------------//
+  OV7670_write_register(0x12, 0x80); //COM7,    SCCB Register Reset
   delay(100);
-  OV7670_write_register(0x12, COM7);
-  OV7670_write_register(0x0C, COM3); 
-  OV7670_write_register(0x14, COM9);                      
-  OV7670_write_register(0x40, COM15);                
-  OV7670_write_register(0x42, COM17);
-  OV7670_write_register(0x11, CLKRC);
-  OV7670_write_register(0x1E, MVFP);
+  OV7670_write_register(0x12, 0x0e); //COM7,    QCIF, RGB output, Color bar enable
+  OV7670_write_register(0x0c, 0x08); //COM3,    Enable scaling
+  OV7670_write_register(0x14, 0x01); //COM9,    Automatic gain ceiling, freeze AGC/AEC
+  OV7670_write_register(0x40, 0xd0); //COM15,   RGB 565 Output
+  OV7670_write_register(0x42, 0x08); //COM17,   DSP color bar enable
+  OV7670_write_register(0x11, 0xc0); //CLKRC,   Use internal clock as external clock
+  OV7670_write_register(0x1e, 0x30); //MVFP,    Mirror & VFlip enable
 
   set_color_matrix();
 
@@ -86,13 +62,13 @@ void read_key_registers() {
   Serial.print("COM7 (SCCB Register Reset) = ");
   Serial.print(read_register_value(0x12), BIN);
   Serial.println("");
-  Serial.print("COM7 (QCIF & color bar enable) = ");
+  Serial.print("COM7 (QCIF, RGB output & Color bar enable) = ");
   Serial.print(read_register_value(0x12), BIN);
   Serial.println("");
   Serial.print("COM3 (Enable scaling) = ");
   Serial.print(read_register_value(0x0C), BIN);
   Serial.println("");
-  Serial.print("COM9 (Automatic Gain Ceiling) = ");
+  Serial.print("COM9 (Automatic Gain Ceiling, freeze AGC/AEC) = ");
   Serial.print(read_register_value(0x14), BIN);
   Serial.println("");
   Serial.print("COM15 (RGB565) = ");
