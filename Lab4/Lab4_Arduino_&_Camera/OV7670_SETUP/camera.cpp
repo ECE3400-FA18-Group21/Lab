@@ -71,28 +71,28 @@ void setup_camera(bool testMode) {
 //--------------------------------------------------------------------------------//
 void read_key_registers() {
   Serial.print("COM7 (SCCB Register Reset) = ");
-  Serial.print(read_register_value(0x12), BIN);
+  Serial.print(read_register_value(0x12), HEX);
   Serial.println("");
   Serial.print("COM7 (QCIF, RGB output & Color bar enable) = ");
-  Serial.print(read_register_value(0x12), BIN);
+  Serial.print(read_register_value(0x12), HEX);
   Serial.println("");
   Serial.print("COM3 (Enable scaling) = ");
-  Serial.print(read_register_value(0x0C), BIN);
+  Serial.print(read_register_value(0x0C), HEX);
   Serial.println("");
   Serial.print("COM9 (Automatic Gain Ceiling, freeze AGC/AEC) = ");
-  Serial.print(read_register_value(0x14), BIN);
+  Serial.print(read_register_value(0x14), HEX);
   Serial.println("");
   Serial.print("COM15 (RGB565) = ");
-  Serial.print(read_register_value(0x40), BIN);
+  Serial.print(read_register_value(0x40), HEX);
   Serial.println("");
   Serial.print("COM17 (DSP color bar enable) = ");
-  Serial.print(read_register_value(0x42), BIN);
+  Serial.print(read_register_value(0x42), HEX);
   Serial.println("");
   Serial.print("CLKRC (Use external clock as internal clock) = ");
-  Serial.print(read_register_value(0x11), BIN);
+  Serial.print(read_register_value(0x11), HEX);
   Serial.println("");
   Serial.print("MVFP (Mirror & VFlip enable) = ");
-  Serial.print(read_register_value(0x1E), BIN);
+  Serial.print(read_register_value(0x1E), HEX);
   Serial.println("");
 }
 byte read_register_value(int register_address) {

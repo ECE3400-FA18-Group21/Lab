@@ -1,0 +1,16 @@
+GPIO-0 (JP1) - RIGHT SIDE
+XCLCK	GPIO 0_33 <--this is the bottom, rightmost pin
+
+GPIO-1 (JP2) - LEFT SIDE
+D7	GPIO 1_25
+D6	GPIO 1_23
+D5	GPIO 1_21
+D4	GPIO 1_19
+D3	GPIO 1_17
+D2	GPIO 1_15
+D1	GPIO 1_13
+D0	GPIO 1_11
+GND	GPIO 1_9
+PCLCK	GPIO 1_7
+HREF	GPIO 1_5
+VSYNC	GPIO 1_3  <--this is the third pin from the bottom
