@@ -10,7 +10,9 @@ module DOWN_SAMPLER(
 	 rgb332,
 	 X_ADDR,
 	 Y_ADDR,
-	 WEN
+	 WEN,
+	 
+	 COLOR
     );
 	 
     input             reset, pclk, href, vsync;
@@ -21,6 +23,8 @@ module DOWN_SAMPLER(
 	 output reg [14:0] X_ADDR, Y_ADDR;
 	 output reg        WEN;
 	 
+	 output reg [1:0]  COLOR; //1 if red, 2 if blue, 0 otherwise
+	 
 	 localparam [2:0]  IDLE       = 3'd0,
 	                   NEW_FRAME  = 3'd1,
 	                   FRAME_IDLE = 3'd2,
@@ -28,6 +32,10 @@ module DOWN_SAMPLER(
 	                   READ_BYTE_2= 3'd4;
 							 
 	reg         [2:0]  state, next_state;
+	
+	reg         [14:0] red_count = 0;
+	reg         [14:0] blue_count = 0;
+	reg         [14:0] unsure_count = 0;
 	
 	
 	// Combinational WEN Logic
@@ -59,7 +67,24 @@ module DOWN_SAMPLER(
 	  end
 	  else if (state == READ_BYTE_2 && next_state == READ_BYTE_1)
 	    X_ADDR <= X_ADDR + 1;	
-		 
+	  // Sequential Color Detection Logic
+	  if (state == READ_BYTE_2) begin
+		 if (rgb332[7:5] > 3'b100 && rgb332[1:0] < 2'b10 && rgb332[4:2] < 3'b100)
+			  red_count <= red_count + 1;  // Sees Red
+		 else if (rgb332[7:5] < 3'b100 && rgb332[1:0] > 2'b10 && rgb332[4:2] < 3'b100)
+			  blue_count <= blue_count + 1;  // Sees Blue
+		 else
+		     unsure_count <= unsure_count + 1; //Not sure
+	  end
+	  if (state == NEW_FRAME) begin
+	    if (red_count > blue_count && red_count > unsure_count)
+		   COLOR <= 1;
+		 //if (blue_count > red_count  && blue_count > unsure_count)
+		 //  COLOR <= 2;
+		 else
+		   COLOR <= 0;
+	  end
+	  
      // Sequential State Transition Logic	
 	  if (reset)
 	    state <= FRAME_IDLE;

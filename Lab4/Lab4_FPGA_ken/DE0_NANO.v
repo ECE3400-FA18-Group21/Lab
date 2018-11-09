@@ -57,9 +57,10 @@ assign GPIO_0_D[33] = CLK_24; //ADDED FOR CAMERA
 
 ///// I/O for Img Proc /////
 wire [8:0] RESULT;
-wire COLOR_DETECT;
+wire [1:0] COLOR_DETECT;
 
-assign GPIO_0_D[31] = COLOR_DETECT;  // one bit output for more red or more blue
+assign GPIO_0_D[31] = COLOR_DETECT[0];  // one bit output for more red or more blue
+assign GPIO_0_D[29] = COLOR_DETECT[1];  // one bit output for more red or more blue
 
 /* WRITE ENABLE */
 wire W_EN; // Changed from reg to wire by ken
@@ -108,18 +109,19 @@ DOWN_SAMPLER down(
 	.rgb332(pixel_data_RGB332),
 	.X_ADDR(X_ADDR),
 	.Y_ADDR(Y_ADDR),
-	.WEN(W_EN)
+	.WEN(W_EN),
+	.COLOR(COLOR_DETECT)
     );
 
 ///////* Image Processor *///////
-IMAGE_PROCESSOR proc(
-	.PIXEL_IN(MEM_OUTPUT),
-	.CLK(CLK_25),
-	.VGA_PIXEL_X(VGA_PIXEL_X),
-	.VGA_PIXEL_Y(VGA_PIXEL_Y),
-	.VGA_VSYNC_NEG(VGA_VSYNC_NEG),
-	.RESULT(COLOR_DETECT)
-);
+//IMAGE_PROCESSOR proc(
+//	.PIXEL_IN(MEM_OUTPUT),
+//	.CLK(CLK_25),
+//	.VGA_PIXEL_X(VGA_PIXEL_X),
+//	.VGA_PIXEL_Y(VGA_PIXEL_Y),
+//	.VGA_VSYNC_NEG(VGA_VSYNC_NEG),
+//	.RESULT(COLOR_DETECT)
+//);
 
 
 ///////* Update Read Address *///////
