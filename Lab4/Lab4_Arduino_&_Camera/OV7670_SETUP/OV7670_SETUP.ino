@@ -15,7 +15,7 @@
 int FPGA_comms_pin1 = 5; 
 int FPGA_comms_pin2 = 6;
 int FPGA_comms_pin3 = 7;
-bool testMode = true;
+bool testMode = false;
 
 void setup(){
   Serial.begin(9600);
