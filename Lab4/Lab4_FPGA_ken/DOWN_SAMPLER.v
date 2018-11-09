@@ -29,23 +29,6 @@ module DOWN_SAMPLER(
 							 
 	reg         [2:0]  state, next_state;
 	
-   // Sequential State Transition Logic	
-	always @ (posedge pclk) begin
-	  if (reset)
-	    state <= IDLE;
-	  else
-	    state <= next_state;
-	end
-	
-	// Sequential RGB Downsampling Logic
-	always @ (posedge pclk) begin
-	  if (state == READ_BYTE_1) begin
-		 rgb332[7:5] <= rgb565[7:5];
-		 rgb332[4:2] <= rgb565[2:0];
-	  end
-	  else if (state == READ_BYTE_2)
-		 rgb332[1:0] <= rgb565[4:3];
-	end
 	
 	// Combinational WEN Logic
 	always @ (*) begin
@@ -55,8 +38,17 @@ module DOWN_SAMPLER(
 	    WEN <= 0;
 	end
 	
-	// Address Update Logic (Mealy transitions)
-	always @ (negedge pclk) begin  //negedge should be after state transition posedge
+	
+	always @ (posedge pclk) begin
+	  // Sequential RGB Downsampling Logic
+	  if (state == READ_BYTE_1) begin
+		 rgb332[7:5] <= rgb565[7:5];
+		 rgb332[4:2] <= rgb565[2:0];
+	  end
+	  else if (state == READ_BYTE_2)
+		 rgb332[1:0] <= rgb565[4:3];
+		 
+	  // Address Update Logic (Mealy transitions)
 	  if (next_state == NEW_FRAME) begin
 	    X_ADDR <= 0;
 	    Y_ADDR <= 0;
@@ -66,7 +58,13 @@ module DOWN_SAMPLER(
 	    Y_ADDR <= Y_ADDR + 1;
 	  end
 	  else if (state == READ_BYTE_2 && next_state == READ_BYTE_1)
-	    X_ADDR <= X_ADDR + 1;
+	    X_ADDR <= X_ADDR + 1;	
+		 
+     // Sequential State Transition Logic	
+	  if (reset)
+	    state <= FRAME_IDLE;
+	  else
+	    state <= next_state;
 	end
 	
 	// Combinational Next State Logic
