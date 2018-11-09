@@ -1,0 +1,1 @@
+Warning (10268): Verilog HDL information at IMAGE_PROCESSOR.v(32): always construct contains both blocking and non-blocking assignments File: C:/Users/labuser/Downloads/Lab4_FPGA_ken/IMAGE_PROCESSOR.v Line: 32
