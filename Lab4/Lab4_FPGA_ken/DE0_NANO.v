@@ -57,6 +57,9 @@ assign GPIO_0_D[33] = CLK_24; //ADDED FOR CAMERA
 
 ///// I/O for Img Proc /////
 wire [8:0] RESULT;
+wire COLOR_DETECT;
+
+assign GPIO_0_D[31] = COLOR_DETECT;  // one bit output for more red or more blue
 
 /* WRITE ENABLE */
 wire W_EN; // Changed from reg to wire by ken
@@ -115,7 +118,7 @@ IMAGE_PROCESSOR proc(
 	.VGA_PIXEL_X(VGA_PIXEL_X),
 	.VGA_PIXEL_Y(VGA_PIXEL_Y),
 	.VGA_VSYNC_NEG(VGA_VSYNC_NEG),
-	.RESULT(RESULT)
+	.RESULT(COLOR_DETECT)
 );
 
 
