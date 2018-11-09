@@ -11,6 +11,11 @@
  */
 void one_bit_color_detection(int value);
 
+/**
+ * 
+ */
+void two_bit_communication(int bit1, int bit0);
+
  /**
   * 
   */
