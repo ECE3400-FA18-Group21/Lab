@@ -1,9 +1,9 @@
 /*
-   @date: 10.21.2018
+   @date: 11.18.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station Program - Lab3
+   Base Station - Milestone 4
 */
 #include "nordic_rf.h"
 #include "maze.h"
@@ -33,7 +33,7 @@ void loop() {
   //---------------------------------------------------//
   int instructions[8];
   splitByte(received, instructions);
-
+  
   //Command Type = 00
   if(instructions[1]==0 && instructions[0]==0){
     maze.turnLeft();
@@ -54,6 +54,9 @@ void loop() {
   }
   else
     Serial.println("Invalid command");
+
+  maze.treasureDetect(instructions[7], instructions[6], instructions[5]);
+  
   
   //---------------------------------------------------//
   //                     UPDATE GUI                    //

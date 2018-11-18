@@ -1,9 +1,9 @@
 /*
-   @date: 10.21.2018
+   @date: 11.18.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station Program - Lab3
+   Base Station - Milestone 4
 */
 #include <Arduino.h>
 

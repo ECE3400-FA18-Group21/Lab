@@ -3,7 +3,7 @@
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station - Milestone 4
+   Milestone 4
 */
 #include <SPI.h>
 #include <RF24.h>
