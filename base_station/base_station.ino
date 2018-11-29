@@ -1,5 +1,5 @@
 /*
-   @date: 11.18.2018
+   @date: 11.29.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
@@ -54,21 +54,20 @@ void loop() {
   }
   else
     Serial.println("Invalid command");
-
-  maze.treasureDetect(instructions[7], instructions[6], instructions[5]);
-  
   
   //---------------------------------------------------//
   //                     UPDATE GUI                    //
   //---------------------------------------------------//
-  maze.getGUIMessage(maze.getX(), maze.getY());  
+  int treasure0 = instructions[5] //LSB
+  int treasure1 = instructions[6]
+  int treasure2 = instructions[7] //MSB
+  maze.getGUIMessage(maze.getX(), maze.getY(), treasure2, treasure1, treasure0);  
   delay(100);
 }
 
 //Breaks a byte into an 8-element int array by bit
 void splitByte(byte b, int variable[8]){
   byte i;
- 
   for (i=0; i < 8; ++i )
   {
     variable[i] = b & 1;

@@ -1,9 +1,9 @@
 /*
-   @date: 11.18.2018
+   @date: 11.29.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Milestone 4
+   Base Station - Milestone 4
 */
 #include "nordic_rf.h"
 #include <Arduino.h>
@@ -41,7 +41,7 @@ void send_turn_right(RF24 radio){
   byte instruction = 0b00000001;
   RF24_tx_send(radio, &instruction);  
 }
-void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool rightWall){
+void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool rightWall, bool treasure0, bool treasure1, bool treasure2){
   byte instruction = 0b00000010;
   if(frontWall)
     instruction = instruction | 0b00000100;
@@ -49,17 +49,13 @@ void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool r
     instruction = instruction | 0b00001000;
   if(rightWall)
     instruction = instruction | 0b00010000;
+  if(treasure0)
+    instruction = instruction | 0b00100000;
+  if(treasure1)
+    instruction = instruction | 0b01000000;
+  if(treasure2)
+    instruction = instruction | 0b10000000;
   RF24_tx_send(radio, &instruction); 
-}
-void send_treasure(RF24 radio, int bit2, int bit1, int bit0){
-  byte instruction = 0b00000000;
-  if(bit2)
-    bitSet(instruction, 7)
-  if(bit1)
-    bitSet(instruction, 6)
-  if(bit0)
-    bitSet(instruction, 5)
-  RF24_tx_send(radio, &instruction);
 }
 
 //--------------------------------------------------------//

@@ -1,5 +1,5 @@
 /*
-   @date: 11.18.2018
+   @date: 11.29.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
@@ -25,15 +25,17 @@ void send_turn_left(RF24 radio);
 void send_turn_right(RF24 radio);
 
 /**
-   Send insturction 0b000XYZ10
+   Send insturction 0bABCXYZ10
    X = rightWall
    Y = leftWall
    Z = frontWall
+
+   Treasure Detection
+   A = treasure detection MSB
+   B
+   C = treasure detection LSB
 */
 void send_advance_intersection(RF24 radio, bool frontWall, bool leftWall, bool rightWall);
-
-/** Send instruction about treasure detection */
-void send_treasure(RF24 radio, int bit2, int bit1, int bit0);
 
 //--------------------------------------------------------//
 //              RECEIVER - Base Station                   //

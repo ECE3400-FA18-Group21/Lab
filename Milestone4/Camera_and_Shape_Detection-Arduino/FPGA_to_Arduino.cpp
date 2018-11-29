@@ -38,7 +38,7 @@ void two_bit_communication(int bit1, int bit0) {
 void parallel_communication(int bit2, int bit1, int bit0) {
   //Command Type = 000
   if (bit2==0 && bit1==0 && bit0==0) {
-    Serial.println("No treasure detected");
+    //Serial.println("No treasure detected");
   }
   //Command Type = 001
   else if(bit2==0 && bit1==0 && bit0==1) {

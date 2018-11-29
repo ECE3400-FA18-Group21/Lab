@@ -1,5 +1,5 @@
 /*
-   @date: 11.18.2018
+   @date: 11.29.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
@@ -25,12 +25,12 @@ RF24 radio(9,10);
 Maze maze = Maze();
 
 int MIC_COUNTER = 0;
-int MIC_THRESHOLD = 4;           //better value
+int MIC_THRESHOLD = 5;           //better value
 int i = 0;
 
 bool BEGIN_OPERATIONS = false;
-bool wall_detected = false;
-bool camera_test_mode = false
+bool WALL_DETECTED = false;
+bool CAMERA_TEST_MODE = false   //true=colorBar, false=normal
 
 void setup() {
   Serial.begin(9600);
@@ -44,11 +44,13 @@ void setup() {
   radio.printDetails(); //Leave this here
 
   //I2C SDA (A5) & SCL (A4) pins get set automatically
-  setup_camera(camera_test_mode); //true=colorBar, false=normal
+  setup_camera(CAMERA_TEST_MODE); 
 }
 
-// THIS LOOP IS USED FOR DEBUGGING - please don't delete me
-void loops() {
+//---------------------------------------------------------------------------------------------------//
+//----------------------------------------- DEBUGGING LOOP ------------------------------------------//
+//---------------------------------------------------------------------------------------------------//
+void debug_loop() {
   Serial.println(i);
   send_turn_left(radio);
   send_turn_right(radio);
@@ -62,7 +64,9 @@ void loops() {
   //delay(500);
 }
 
-// THIS IS THE REAL LOOP
+//---------------------------------------------------------------------------------------------------//
+//------------------------------------------ REGULAR LOOP -------------------------------------------//
+//---------------------------------------------------------------------------------------------------//
 void loop() {
   while (!BEGIN_OPERATIONS) {
     unsigned int * sensorStatus = checkSensorsDigital();
@@ -72,7 +76,7 @@ void loop() {
       MIC_COUNTER++;
     else
       MIC_COUNTER = 0;
-    if (MIC_COUNTER > MIC_THRESHOLD) {          //set this to a better threshold
+    if (MIC_COUNTER > MIC_THRESHOLD) {          
       digitalWrite(8, HIGH);
       BEGIN_OPERATIONS = true;
     }
@@ -82,40 +86,51 @@ void loop() {
   while (BEGIN_OPERATIONS) {
     //Line tracking code
     unsigned int * sensorStatus = checkSensorsDigital();
-    if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ) { // wall detected at intersection!
-      if (detect_wall_6in(1)){
-        Serial.println(F("Turn Left Intersection"));
-        turnLeftIntersection(servo_L, servo_R);
-        send_advance_intersection(radio, true, false, true);
-        send_turn_left(radio);
-
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        int bit2 = digitalRead(A5);
-        int bit1 = digitalRead(A4);
-        int bit0 = digitalRead(1);
-        //UPDATE MAZE
-        send_treasure(radio, bit2, bit1, bit0);
-      }
-      else{
-        Serial.println(F("Turn Right Intersection"));
-        turnRightIntersection(servo_L, servo_R);
-        send_advance_intersection(radio, true, false, false);
-        send_turn_right(radio);
-
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        //CORRECT THIS TO INCLUDE CORRECT PINS & SET pinMode
-        int bit2 = digitalRead(A5);
-        int bit1 = digitalRead(A4);
-        int bit0 = digitalRead(1);
-        //UPDATE MAZE
-        send_treasure(radio, bit2, bit1, bit0);
+    if((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0){ //INTERSECTION DETECTED
+      if(detect_wall_6in(3)){                                                      //FRONT WALL DETECTED --> make a turn
+        if(detect_wall_6in(1)){
+          Serial.println(F("Turn Left Intersection"));
+          turnLeftIntersection(servo_L, servo_R);
+          //----------------------------------------------------------------------------------------------------------------------------------------------------//
+          //----------------------------------------------------------------FIX THESE PINS----------------------------------------------------------------------//
+          //----------------------------------------------------------------------------------------------------------------------------------------------------//
+          bool frontWall = detect_wall_6in(3) //A3
+          bool leftWall  = detect_wall_6in(0) //A0
+          bool rightWall = detect_wall_6in(1) //A1
+          bool treasure0 = digitalRead(A5);
+          bool treausre1 = digitalRead(A4);
+          bool treasure2 = digitalRead(1);
+          send_advance_intersection(radio, frontWall, leftWall, rightWall, treasure0, treasure1, treasure2); 
+          send_turn_left(radio);
+        }else{
+          Serial.println(F("Turn Right Intersection"));
+          turnRightIntersection(servo_L, servo_R);
+          //----------------------------------------------------------------------------------------------------------------------------------------------------//
+          //----------------------------------------------------------------FIX THESE PINS----------------------------------------------------------------------//
+          //----------------------------------------------------------------------------------------------------------------------------------------------------//
+          bool frontWall = detect_wall_6in(3) //A3
+          bool leftWall  = detect_wall_6in(0) //A0
+          bool rightWall = detect_wall_6in(1) //A1
+          bool treasure0 = digitalRead(A5);
+          bool treausre1 = digitalRead(A4);
+          bool treasure2 = digitalRead(1);
+          send_advance_intersection(radio, frontWall, leftWall, rightWall, treasure0, treasure1, treasure2); 
+          send_turn_right(radio);
+        }
+      }else{
+        Serial.println(F("Advance Through Intersection"));
+        moveForward(servo_L, servo_R);
+        //----------------------------------------------------------------------------------------------------------------------------------------------------//
+        //----------------------------------------------------------------FIX THESE PINS----------------------------------------------------------------------//
+        //----------------------------------------------------------------------------------------------------------------------------------------------------//
+        bool frontWall = detect_wall_6in(3) //A3
+        bool leftWall  = detect_wall_6in(0) //A0
+        bool rightWall = detect_wall_6in(1) //A1
+        bool treasure0 = digitalRead(A5);
+        bool treausre1 = digitalRead(A4);
+        bool treasure2 = digitalRead(1);
+        send_advance_intersection(radio, frontWall, leftWall, rightWall, treasure0, treasure1, treasure2); 
+        }
       }
     }
     else if (detect_wall_3in(3)) {
@@ -131,7 +146,6 @@ void loop() {
     else {
       moveForward(servo_L, servo_R);
     }
-
     //IR Detection Code
     while (detect_6080hz()) {
       digitalWrite(7, HIGH);
