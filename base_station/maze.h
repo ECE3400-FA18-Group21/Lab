@@ -52,7 +52,13 @@ class Maze {
        getGUIMessage(x, y) returns the message to send to the basestation GUI based on
        x and y coordinate
     */
-    void getGUIMessage(byte x, byte y);
+    void getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool treas_lsb);
+
+    /* 
+     *  processTreasureBits(treas_msb, treas_cb, treas_lsb) returns a String containing 
+     *  color and shape of treasure. Called by getGUIMessage.
+     */
+    String processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb);
 
     /*
        printInfo() prints out the current maze representation state to the serial monitor

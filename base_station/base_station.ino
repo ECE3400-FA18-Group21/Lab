@@ -58,9 +58,9 @@ void loop() {
   //---------------------------------------------------//
   //                     UPDATE GUI                    //
   //---------------------------------------------------//
-  int treasure0 = instructions[5] //LSB
-  int treasure1 = instructions[6]
-  int treasure2 = instructions[7] //MSB
+  int treasure0 = instructions[5]; //LSB
+  int treasure1 = instructions[6];
+  int treasure2 = instructions[7]; //MSB
   maze.getGUIMessage(maze.getX(), maze.getY(), treasure2, treasure1, treasure0);  
   delay(100);
 }
