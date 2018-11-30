@@ -45,6 +45,8 @@ void setup() {
 
   //I2C SDA (A5) & SCL (A4) pins get set automatically
   setup_camera(CAMERA_TEST_MODE); 
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
 }
 
 //---------------------------------------------------------------------------------------------------//
@@ -68,6 +70,7 @@ void debug_loop() {
 //------------------------------------------ REGULAR LOOP -------------------------------------------//
 //---------------------------------------------------------------------------------------------------//
 void loop() {
+  //Flip switch from Camera to Microphone
   while (!BEGIN_OPERATIONS) {
     unsigned int * sensorStatus = checkSensorsDigital();
     stopMotors(servo_L, servo_R);

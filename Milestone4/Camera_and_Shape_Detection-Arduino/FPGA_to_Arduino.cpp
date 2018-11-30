@@ -58,11 +58,11 @@ void parallel_communication(int bit2, int bit1, int bit0) {
   }
   //Command Type = 101
   else if(bit2==1 && bit1==0 && bit0==1) {
-    Serial.println("Red Circle Treasure detected");
+    Serial.println("Red Diamond Treasure detected");
   }
   //Command Type = 110
   else if(bit2==1 && bit1==1 && bit0==0) {
-    Serial.println("Blue Circle Treasure detected");
+    Serial.println("Blue Diamond Treasure detected");
   }
   else
     Serial.println("Invalid command");

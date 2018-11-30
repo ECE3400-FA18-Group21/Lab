@@ -42,7 +42,7 @@ void setup_camera(bool testMode) {
     OV7670_write_register(0x12, 0x0c); //COM7,    QCIF, RGB output, Color bar disable
   }
   OV7670_write_register(0x0c, 0x08);   //COM3,    Enable scaling
-  OV7670_write_register(0x14, 0x01);   //COM9,    Automatic gain ceiling, freeze AGC/AEC
+  //OV7670_write_register(0x14, 0x20);   //COM9,    Automatic gain ceiling, freeze AGC/AEC
   OV7670_write_register(0x40, 0xd0);   //COM15,   RGB 565 Output
   if(testMode) {
     OV7670_write_register(0x42, 0x08); //COM17,   DSP color bar enable

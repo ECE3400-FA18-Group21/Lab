@@ -24,6 +24,8 @@ void setup(){
   pinMode(pin7, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
   setup_camera(testMode);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
 }
 
 void loop(){
