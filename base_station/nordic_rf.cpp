@@ -1,9 +1,9 @@
 /*
-   @date: 11.29.2018
+   @date: 11.30.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station - Milestone 4
+   Base Station - Milestone 4    --> *******FINAL VERSION*********
 */
 #include "nordic_rf.h"
 #include <Arduino.h>
@@ -73,11 +73,12 @@ void RF24_rx_setup(RF24 radio) {
 
 /* Read data if available */
 byte RF24_rx_read(RF24 radio) {
-
-  byte pipe, msg;                          // Declare variables for the pipe and the byte received
-  while ( radio.available(&pipe)) {            // Read pipe 1
+  byte pipe;
+  byte msg;
+  while (!radio.available(&pipe));          //EXTREMELY IMPORTANT LINE
+  while(radio.available(&pipe)) {           // Read pipe 1
     radio.read( &msg, 1 );
-    //Serial.print(F("Loaded next response "));
+    Serial.print(F("Loaded next response "));
     //Serial.println(msg);
   }
   return msg;

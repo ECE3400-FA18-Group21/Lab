@@ -1,9 +1,9 @@
 /*
-   @date: 11.29.2018
+   @date: 11.30.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station - Milestone 4
+   Base Station - Milestone 4    --> *******FINAL VERSION*********
 */
 #include <Arduino.h>
 
