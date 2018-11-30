@@ -30,6 +30,8 @@ bool BEGIN_OPERATIONS = false;
 bool wall_detected = false;
 
 void setup() {
+
+  
   Serial.begin(9600);
   printf_begin();       //Leave this here
   pinMode(7, OUTPUT);   //set pin as output to toggle LED --> IR circuit
