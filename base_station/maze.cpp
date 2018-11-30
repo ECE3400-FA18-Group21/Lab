@@ -295,9 +295,9 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
       west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
       east_bool = (walls[y] & (0x1 << x)) >> x;
   }
-  char treas_char[20];
+  char treas_char[50];
   String treas_string = processTreasureBits(treas_msb, treas_cb, treas_lsb);
-  treas_string.toCharArray(treas_char, 20);
+  treas_string.toCharArray(treas_char, 50);
   
   char north_char[6];
   char south_char[6];
@@ -347,11 +347,11 @@ String Maze::processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb) 
       tcolor = "Blue";
       break;
     case 5:
-      tshape = "Circle";
+      tshape = "Diamond";
       tcolor = "Red";
       break;
     case 6:
-      tshape = "Circle";
+      tshape = "Diamond";
       tcolor = "Blue";
       break;
     case 7:
@@ -360,7 +360,11 @@ String Maze::processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb) 
       tshape = "None";
       tcolor = "None";
   }
-  sprintf(result_buf, "tshape=%s, tcolor=%s", tshape, tcolor);
+  char tshape_buf[20];
+  char tcolor_buf[20];
+  tshape.toCharArray(tshape_buf, 20);
+  tcolor.toCharArray(tcolor_buf, 20);
+  sprintf(result_buf, "tshape=%s,tcolor=%s", tshape_buf, tcolor_buf);
   String result_str(result_buf);
   return result_str;
 }
