@@ -1,9 +1,9 @@
 /*
-   @date: 10.21.2018
+   @date: 11.29.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station Program - Lab3
+   Base Station - Milestone 4
 */
 #include "nordic_rf.h"
 #include "maze.h"
@@ -33,7 +33,7 @@ void loop() {
   //---------------------------------------------------//
   int instructions[8];
   splitByte(received, instructions);
-
+  
   //Command Type = 00
   if(instructions[1]==0 && instructions[0]==0){
     maze.turnLeft();
@@ -58,14 +58,16 @@ void loop() {
   //---------------------------------------------------//
   //                     UPDATE GUI                    //
   //---------------------------------------------------//
-  maze.getGUIMessage(maze.getX(), maze.getY());  
+  int treasure0 = instructions[5]; //LSB
+  int treasure1 = instructions[6];
+  int treasure2 = instructions[7]; //MSB
+  maze.getGUIMessage(maze.getX(), maze.getY(), treasure2, treasure1, treasure0);  
   delay(100);
 }
 
 //Breaks a byte into an 8-element int array by bit
 void splitByte(byte b, int variable[8]){
   byte i;
- 
   for (i=0; i < 8; ++i )
   {
     variable[i] = b & 1;

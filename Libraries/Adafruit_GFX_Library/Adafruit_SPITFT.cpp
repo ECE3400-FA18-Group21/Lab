@@ -32,19 +32,18 @@
 *
 */
 
-#ifndef __AVR_ATtiny85__ // NOT A CHANCE of this stuff working on ATtiny!
+#if !defined(__AVR_ATtiny85__) // NOT A CHANCE of this stuff working on ATtiny
 
 #include "Adafruit_SPITFT.h"
-#ifndef ARDUINO_STM32_FEATHER
+#if !defined(ARDUINO_STM32_FEATHER)
   #include "pins_arduino.h"
-#ifndef RASPI
-    #include "wiring_private.h"
 #endif
+#if !defined(ARDUINO_STM32_FEATHER) && !defined(RASPI)
+  #include "wiring_private.h"
 #endif
 #include <limits.h>
 
 #include "Adafruit_SPITFT_Macros.h"
-
 
 
 /**************************************************************************/
@@ -218,7 +217,7 @@ void Adafruit_SPITFT::initSPI(uint32_t freq) {
 
 /**************************************************************************/
 /*!
-    @brief   Read one byte from SPI interface (hardware or software
+    @brief   Read one byte from SPI interface (hardware or software)
     @returns One byte, MSB order
 */
 /**************************************************************************/
@@ -243,7 +242,7 @@ uint8_t Adafruit_SPITFT::spiRead() {
 
 /**************************************************************************/
 /*!
-    @brief   Write one byte to SPI interface (hardware or software
+    @brief   Write one byte to SPI interface (hardware or software)
     @param  b  One byte to send, MSB order
 */
 /**************************************************************************/

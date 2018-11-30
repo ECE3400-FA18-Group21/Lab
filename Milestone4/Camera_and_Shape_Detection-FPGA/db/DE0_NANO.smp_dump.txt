@@ -1,0 +1,8 @@
+
+State Machine - |DE0_NANO|DOWN_SAMPLER:down|state
+Name state.READ_BYTE_1 state.IDLE state.NEW_FRAME state.FRAME_IDLE state.READ_BYTE_2 
+state.FRAME_IDLE 0 0 0 0 0 
+state.NEW_FRAME 0 0 1 1 0 
+state.IDLE 0 1 0 1 0 
+state.READ_BYTE_1 1 0 0 1 0 
+state.READ_BYTE_2 0 0 0 1 1 

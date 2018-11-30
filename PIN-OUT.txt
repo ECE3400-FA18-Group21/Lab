@@ -1,0 +1,25 @@
+GPIO
+0	 = 
+1	 = FPGA Treasure Detect --> Bit 2 (MSB)	 
+2	 = FPGA Treasure Detect --> Bit 1
+3	 = FPGA Treasure Detect --> Bit 0 (LSB)
+4	 = Digital Line Sensor --> Left
+5	 = Digital Line Sensor --> Middle
+6	 = Digital Line Sensor --> Right
+7        = Radio CSN
+8        = Radio CE
+9	 = Left Servo 
+10	 = Right Servo
+11       = Radio MOSI
+12       = Radio MISO
+13       = Radio SCK
+
+ANALOG
+A0       = IR Range Finder --> Left
+A1       = IR Range Finder --> Front
+A2       = IR Range Finder --> Right
+A3       = IR Detection Circuit        (CHANGE THIS IN FFT)
+A4 (SDA) = Setup camera (done once)
+A5 (SCL) = MANUAL SWITCH
+	   • On power up --> setup camera using SCL (done once)
+	   • For all future time --> Microphone Detection Circuit
