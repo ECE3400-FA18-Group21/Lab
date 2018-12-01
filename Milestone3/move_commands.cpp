@@ -40,7 +40,7 @@ void turnRight(Servo servo_L, Servo servo_R){
   servo_R.write(180);
   servo_L.write(180);
   while(!sensorStatus[1]){sensorStatus = checkSensorsDigital();};
-  delay(50);
+  delay(300);
   while(sensorStatus[1]){sensorStatus = checkSensorsDigital();};
   
   stopMotors(servo_L, servo_R);
@@ -52,7 +52,7 @@ void turnLeft(Servo servo_L, Servo servo_R){
   servo_R.write(0);
   servo_L.write(0);
   while(!sensorStatus[1]){sensorStatus = checkSensorsDigital();};
-  delay(50);
+  delay(300);
   while(sensorStatus[1]){sensorStatus = checkSensorsDigital();};
   stopMotors(servo_L, servo_R);
 }

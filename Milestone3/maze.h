@@ -24,6 +24,8 @@ class Maze {
     byte dfs_stack[81]; // Stores positions that have been visited (return path)
     byte stack_ptr; // Pointer for stack head
 
+    bool backtrack; // Says if robot is backtracking
+
     
     /*
      * getAbsoluteCoord(byte dir return)s the absolute coordinate that is relative direction [dir] from the robot

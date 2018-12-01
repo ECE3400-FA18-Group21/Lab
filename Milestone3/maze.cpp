@@ -387,17 +387,17 @@ byte Maze::getNextCommand(bool frontWall, bool leftWall, bool rightWall) {
 
   // First check for unvisited spaces- updates DFS stack
   
-  if (!leftWall && !isVisited(getAbsoluteCoord(1))){
-    // Update DFS stack
-    stack_ptr = stack_ptr + 1;
-    dfs_stack[stack_ptr] = pos;
-    return 1;
-  }
-  else if (!frontWall && !isVisited(getAbsoluteCoord(0))){
+  if (!frontWall && !isVisited(getAbsoluteCoord(0))){
     // Update DFS stack
     stack_ptr = stack_ptr + 1;
     dfs_stack[stack_ptr] = pos;
     return 0;
+  }
+  else if (!leftWall && !isVisited(getAbsoluteCoord(1))){
+    // Update DFS stack
+    stack_ptr = stack_ptr + 1;
+    dfs_stack[stack_ptr] = pos;
+    return 1;
   }
   else if (!rightWall && !isVisited(getAbsoluteCoord(2))){
     // Update DFS stack
@@ -407,8 +407,10 @@ byte Maze::getNextCommand(bool frontWall, bool leftWall, bool rightWall) {
   }
   else{
     //Backtrack- pop off stack
+    backtrack = true;
     byte next_coord = dfs_stack[stack_ptr];
-    stack_ptr = stack_ptr - 1;
+    if (stack_ptr > 0)
+      stack_ptr = stack_ptr - 1;
 
     // Calculate direction to next coordinate
     byte next_x = next_coord >> 4;
@@ -424,24 +426,27 @@ byte Maze::getNextCommand(bool frontWall, bool leftWall, bool rightWall) {
     // Compute next heading
     byte next_heading = 0;
 
-    if ( x_diff == 0 && y_diff == -1 )
+    if ( x_diff == 0 && y_diff == 255 )
       next_heading = 0;
     else if ( x_diff == 1 && y_diff == 0 )
       next_heading = 1;
     else if ( x_diff == 0 && y_diff == 1 )
       next_heading = 2;
-    else if ( x_diff == -1 && y_diff == 0 )
+    else if ( x_diff == 255 && y_diff == 0 )
       next_heading = 3;
 
     // Compute direction based on current heading
     byte heading_diff = next_heading - heading;
     heading_diff = (heading_diff + 40) % 4;
 
-    if (heading_diff == 0) // Go straight
+    if (heading_diff == 0){ // Go straight 
+       Serial.println(x_diff);
+       Serial.println(y_diff);
       return 0;
+    }
     else if (heading_diff == 1) // Turn right
       return 2;
-    else if (heading_diff == -1) // Turn left
+    else if (heading_diff == 3) // Turn left
       return 1;
     else if (heading_diff == 2) // Turn around
       return 3;

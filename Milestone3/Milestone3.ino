@@ -23,7 +23,7 @@ RF24 radio(9,10);
 Maze maze = Maze();
 
 int MIC_COUNTER = 0;
-int MIC_THRESHOLD = 4;           //better value
+int MIC_THRESHOLD = 8;           //better value
 int i = 0;
 
 bool BEGIN_OPERATIONS = false;
@@ -57,8 +57,6 @@ void loops() {
   Serial.println("");
   Serial.println("");
   Serial.println("");
-
-  
   
   maze.advanceIntersection(false, false, false);
   Serial.print("Next Command: ");
@@ -68,56 +66,48 @@ void loops() {
   Serial.println("");
   Serial.println("");
   Serial.println("");
-
-  
   
   maze.advanceIntersection(true, false, false);
   Serial.print("Next Command: ");
   Serial.println(maze.getNextCommand(true, false, false));
-  maze.turnLeft();
-  maze.printInfo();
-  Serial.println("");
-  Serial.println("");
-  Serial.println("");
-
-  
-  
-  maze.advanceIntersection(true, false, true);
-  Serial.print("Next Command: ");
-  Serial.println(maze.getNextCommand(true, false, true));
-  maze.turnRight();
   maze.turnRight();
   maze.printInfo();
   Serial.println("");
   Serial.println("");
   Serial.println("");
-
-  
-  
-  maze.advanceIntersection(false, true, false);
-  Serial.print("Next Command: ");
-  Serial.println(maze.getNextCommand(false, true, false));
-  maze.printInfo();
-  Serial.println("");
-  Serial.println("");
-  Serial.println("");
-
-  
   
   maze.advanceIntersection(true, true, false);
   Serial.print("Next Command: ");
   Serial.println(maze.getNextCommand(true, true, false));
+  maze.turnRight();
   maze.printInfo();
   Serial.println("");
   Serial.println("");
   Serial.println("");
-  while(true){
-    
-      
-    unsigned int * sensorStatus = checkSensorsDigital();
-  }
+  
+  maze.advanceIntersection(true, true, false);
+  Serial.print("Next Command: ");
+  Serial.println(maze.getNextCommand(true, true, false));
+  maze.turnRight();
+  maze.turnRight();
+  maze.printInfo();
+  Serial.println(F(""));
+  Serial.println(F(""));
+  Serial.println(F(""));
+  
+  maze.advanceIntersection(true, false, true);
+  Serial.print(F("Next Command: "));
+  Serial.println(maze.getNextCommand(true, false, true));
+  maze.printInfo();
+  Serial.println(F(""));
+  Serial.println(F(""));
+  Serial.println(F(""));
 
   
+  while(true){
+    Serial.println(analogRead(3));
+    
+  }
 }
 
 // THIS IS THE REAL LOOP
@@ -142,42 +132,48 @@ void loop() {
       
     unsigned int * sensorStatus = checkSensorsDigital();
     if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0)) { // Intersection Detected!
+      digitalWrite(7, HIGH);
+      stopMotors(servo_L, servo_R);
       front_wall = detect_wall_6in(3);
       left_wall = detect_wall_6in(2);
       right_wall = detect_wall_6in(1);
       
       maze.advanceIntersection(front_wall, left_wall, right_wall); //A3 is front, A2 is left, A1 is right
-      //send_advance_intersection(radio, front_wall, left_wall, right_wall);
+      send_advance_intersection(radio, front_wall, left_wall, right_wall);
       
       byte next_command = maze.getNextCommand(front_wall, left_wall, right_wall);
-      Serial.print(F("Next Command: "));
-      Serial.println(next_command);
-      maze.printInfo();
-      Serial.print(F(" Wall Sensor Readings"));
-      Serial.print(front_wall); Serial.print(F("   ")); Serial.print(left_wall); Serial.print(F("   ")); Serial.print(right_wall); Serial.println(F("   "));
+      //Serial.print(F("Next Command: "));
+      //Serial.println(next_command);
+      //maze.printInfo();
+      //Serial.print(F(" Wall Sensor Readings"));
+      //Serial.print(front_wall); Serial.print(F("   ")); Serial.print(left_wall); Serial.print(F("   ")); Serial.print(right_wall); Serial.println(F("   "));
+      digitalWrite(7, LOW);
       
 
       if (next_command == 0){
         moveForward(servo_L, servo_R);
+        delay(300);
       }
       else if (next_command == 1){
         turnLeftIntersection(servo_L, servo_R);
         maze.turnLeft();
-        //send_turn_left(radio);
+        send_turn_left(radio);
       }
       else if (next_command == 2){
         turnRightIntersection(servo_L, servo_R);
         maze.turnRight();
-        //send_turn_right(radio);
+        send_turn_right(radio);
       }
       else if (next_command == 3){
         digitalWrite(7, HIGH);
-        //send_turn_right(radio);
+        send_turn_right(radio);
         turnRightIntersection(servo_L, servo_R);
+
+
         turnRight(servo_L, servo_R);
         maze.turnRight();
         maze.turnRight(); 
-        //send_turn_right(radio);
+        send_turn_right(radio);
 
       }
     }
@@ -191,10 +187,10 @@ void loop() {
     }
 
     //IR Detection Code
-    while (detect_6080hz()) {
-      digitalWrite(7, HIGH);
-      stopMotors(servo_L, servo_R);
-    }
+    //while (detect_6080hz()) {
+      //digitalWrite(7, HIGH);
+      //stopMotors(servo_L, servo_R);
+    //}
     digitalWrite(7, LOW);
   }
 }
