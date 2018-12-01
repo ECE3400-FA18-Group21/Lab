@@ -1,9 +1,9 @@
 /*
-   @date: 11.29.2018
+   @date: 11.30.2018
    @version: 01
    @course: ECE 3400, Fall 2018
    @team: 21
-   Base Station - Milestone 4
+   Base Station - Milestone 4    --> *******FINAL VERSION*********
 */
 #include "nordic_rf.h"
 #include "maze.h"
@@ -33,7 +33,6 @@ void loop() {
   //---------------------------------------------------//
   int instructions[8];
   splitByte(received, instructions);
-  
   //Command Type = 00
   if(instructions[1]==0 && instructions[0]==0){
     maze.turnLeft();
@@ -58,9 +57,9 @@ void loop() {
   //---------------------------------------------------//
   //                     UPDATE GUI                    //
   //---------------------------------------------------//
-  int treasure0 = instructions[5]; //LSB
-  int treasure1 = instructions[6];
-  int treasure2 = instructions[7]; //MSB
+  bool treasure0 = convert_Int_to_Bool(instructions[5]); //LSB
+  bool treasure1 = convert_Int_to_Bool(instructions[6]);
+  bool treasure2 = convert_Int_to_Bool(instructions[7]); //MSB
   maze.getGUIMessage(maze.getX(), maze.getY(), treasure2, treasure1, treasure0);  
   delay(100);
 }
