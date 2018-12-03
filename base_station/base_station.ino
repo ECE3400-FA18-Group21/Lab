@@ -57,9 +57,9 @@ void loop() {
   //---------------------------------------------------//
   //                     UPDATE GUI                    //
   //---------------------------------------------------//
-  bool treasure0 = convert_Int_to_Bool(instructions[5]); //LSB
-  bool treasure1 = convert_Int_to_Bool(instructions[6]);
-  bool treasure2 = convert_Int_to_Bool(instructions[7]); //MSB
+  bool treasure0 = 0; //convert_Int_to_Bool(instructions[5]); //LSB
+  bool treasure1 = 0; //convert_Int_to_Bool(instructions[6]);
+  bool treasure2 = 0; //convert_Int_to_Bool(instructions[7]); //MSB
   maze.getGUIMessage(maze.getX(), maze.getY(), treasure2, treasure1, treasure0);  
   delay(100);
 }

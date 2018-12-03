@@ -12,9 +12,9 @@
 #include "camera.h"
 #include "FPGA_to_Arduino.h"
 
-int pin5 = 5;
-int pin6 = 6; 
-int pin7 = 7;
+int pin5 = 3;
+int pin6 = 4; 
+int pin7 = 5;
 bool testMode = false;
 
 void setup(){
