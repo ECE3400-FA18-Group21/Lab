@@ -1,10 +1,10 @@
 /*
-   @date: 11.30.2018
-   @version: 01
-   @course: ECE 3400, Fall 2018
-   @team: 21
-   Base Station - Milestone 4    --> *******FINAL VERSION*********
-*/
+ * @date: 12.03.2018
+ * @version: 01
+ * @course: ECE 3400, Fall 2018
+ * @team: 21
+ * BASE STATION CODE FOR FINAL COMPETITION
+ */
 #include "nordic_rf.h"
 #include "maze.h"
 #include <printf.h>
@@ -33,8 +33,13 @@ void loop() {
   //---------------------------------------------------//
   int instructions[8];
   splitByte(received, instructions);
+
+  //Command = 11111111
+  if(instructions[7]==1 && instructions[6]==1 && instructions[5]==1 && instructions[4]==1 && instructions[3]==1 && instructions[2]==1 && instructions[1]==1 && instructions[0]==1){
+     maze.robotDetected();
+  }
   //Command Type = 00
-  if(instructions[1]==0 && instructions[0]==0){
+  else if(instructions[1]==0 && instructions[0]==0){
     maze.turnLeft();
     //Serial.println("Turn Left = 00");
   }

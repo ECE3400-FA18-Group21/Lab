@@ -3,7 +3,7 @@
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * BASE STATION CODE FOR FINAL COMPETITION
+ * CODE FOR FINAL COMPETITION
  */
 #include "maze.h"
 
@@ -17,8 +17,14 @@ Maze::Maze() {
     walls[i] = 0; //Robot starts knowing none of the walls
   for (byte i = 0; i < 9; i++)
     visited[i] = 0;
+  visited[0] = 1;
   pos = 0;     //Robot starts at 0,0
   heading = 2; //Robot starts facing downward
+
+  
+  stack_ptr = 0;
+  for (byte i = 0; i < 81; i++)
+    dfs_stack[i] = 0;
 }
 
 /*
@@ -28,7 +34,7 @@ Maze::Maze() {
 void Maze::turnLeft() {
   byte temp_heading = heading;
   temp_heading = temp_heading - 1;
-  temp_heading = temp_heading % 4;
+  temp_heading = (temp_heading + 40) % 4;
   heading = temp_heading;
 }
 /*
@@ -38,7 +44,7 @@ void Maze::turnLeft() {
 void Maze::turnRight() {
   byte temp_heading = heading;
   temp_heading = temp_heading + 1;
-  temp_heading = temp_heading % 4;
+  temp_heading = (temp_heading + 40) % 4;
   heading = temp_heading;
 }
 /*
@@ -81,7 +87,7 @@ void Maze::advanceIntersection(bool frontWall, bool leftWall, bool rightWall) {
       pos = pos | x_coord; // Set x coordinate
       break;
     default:
-      Serial.println("Heading error");
+      Serial.println(F("Heading error"));
   }
 
   //Next Update walls[]
@@ -217,9 +223,11 @@ void Maze::advanceIntersection(bool frontWall, bool leftWall, bool rightWall) {
       }
       break;
     default:
-      Serial.println("Heading error");
+      Serial.println(F("Heading error"));
   }
 
+  // Next Update Visited Nodes
+  visited[getY()] |= 1 << getX();
 }
 
 byte Maze::getX() {
@@ -230,7 +238,7 @@ byte Maze::getY() {
   return (pos & 0x0F);
 }
 
-void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool treas_lsb) {
+String Maze::getGUIMessage(byte x, byte y) {
   bool north_bool;
   bool south_bool;
   bool west_bool;
@@ -295,10 +303,6 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
       west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
       east_bool = (walls[y] & (0x1 << x)) >> x;
   }
-  char treas_char[50];
-  String treas_string = processTreasureBits(treas_msb, treas_cb, treas_lsb);
-  treas_string.toCharArray(treas_char, 50);
-  
   char north_char[6];
   char south_char[6];
   char east_char[6];
@@ -313,62 +317,144 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
   east.toCharArray(east_char, 6);
   char buffer[50];
   int n;
-  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,%s,robot=false", y, x, north_char, south_char, west_char, east_char, treas_char); //x y flipped b/c GUI takes row # first
+  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,robot=false", y, x, north_char, south_char, west_char, east_char); //x y flipped b/c GUI takes row # first
   for (int i = 0; i < n; i++) {
     Serial.print(buffer[i]);
   }
   Serial.println();
 }
 
-String Maze::processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb) {
-  byte treasure = (treas_msb << 2) | (treas_cb << 1) | treas_lsb;
-  char result_buf[] = "";
-  String tshape;
-  String tcolor;
-  switch(treasure) {
-    case 0: 
-      tshape = "None";
-      tcolor = "None";
-      break;
-    case 1:
-      tshape = "Triangle";
-      tcolor = "Red";
-      break;
-    case 2:
-      tshape = "Triangle";
-      tcolor = "Blue";
-      break;
-    case 3:
-      tshape = "Square";
-      tcolor = "Red";
-      break;
-    case 4:
-      tshape = "Square";
-      tcolor = "Blue";
-      break;
-    case 5:
-      tshape = "Diamond";
-      tcolor = "Red";
-      break;
-    case 6:
-      tshape = "Diamond";
-      tcolor = "Blue";
-      break;
-    case 7:
-      Serial.println("Invalid Treasure Command!");
-    default:
-      tshape = "None";
-      tcolor = "None";
+// ============================= DFS IMPLEMENTATION ==================================
+
+byte Maze::getAbsoluteCoord(byte dir){ //This is the key function that will probably be the problem child
+  //Coordinate to return. Encoded same way as robot position:
+  //Bits [7:4] are x coordinate
+  //Bits [3:0] are y coordinate
+  byte coord_abs = 0; 
+  
+  //Coordinates that get combined into actual coordinate
+  byte x = getX();
+  byte y = getY(); 
+  
+  //Absolute direction (same encoding as heading)
+  byte dir_abs = heading;
+
+  //Look Forward
+  if (dir == 0){
+    dir_abs = dir_abs;
   }
-  char tshape_buf[20];
-  char tcolor_buf[20];
-  tshape.toCharArray(tshape_buf, 20);
-  tcolor.toCharArray(tcolor_buf, 20);
-  sprintf(result_buf, "tshape=%s,tcolor=%s", tshape_buf, tcolor_buf);
-  String result_str(result_buf);
-  return result_str;
+    
+  //Look Left
+  else if (dir == 1){
+    dir_abs = dir_abs - 1;
+    dir_abs = (dir_abs + 40) % 4;
+  }
+
+  //Look Right
+  else if (dir == 2){
+    dir_abs = dir_abs + 1;
+    dir_abs = (dir_abs + 40) % 4;
+  }
+
+  //Now use dir_abs to get the absolute coordinate
+  if (dir_abs == 0)
+    y = y - 1;
+  else if (dir_abs == 1)
+    x = x + 1;
+  else if (dir_abs == 2)
+    y = y + 1;
+  else if (dir_abs == 3)
+    x = x - 1;
+
+  // Create Coordinate
+  coord_abs = coord_abs & 0xF0; // Clear y coordinate
+  coord_abs = coord_abs | y; // Set y coordinate
+  coord_abs = coord_abs & 0x0F; // Clear x coordinate
+  x = x << 4;
+  coord_abs = coord_abs | x; // Set x coordinate
+
+  return coord_abs;
 }
 
+bool Maze::isVisited(byte coord){
+  byte x = coord >> 4;
+  byte y = coord & 0x0F;
+
+  return (visited[y] >> x) & 0x0001;
+}
+
+byte Maze::getNextCommand(bool frontWall, bool leftWall, bool rightWall) {
+
+  // First check for unvisited spaces- updates DFS stack
+  
+  if (!frontWall && !isVisited(getAbsoluteCoord(0))){
+    // Update DFS stack
+    stack_ptr = stack_ptr + 1;
+    dfs_stack[stack_ptr] = pos;
+    return 0;
+  }
+  else if (!leftWall && !isVisited(getAbsoluteCoord(1))){
+    // Update DFS stack
+    stack_ptr = stack_ptr + 1;
+    dfs_stack[stack_ptr] = pos;
+    return 1;
+  }
+  else if (!rightWall && !isVisited(getAbsoluteCoord(2))){
+    // Update DFS stack
+    stack_ptr = stack_ptr + 1;
+    dfs_stack[stack_ptr] = pos;
+    return 2;
+  }
+  else{
+    //Backtrack- pop off stack
+    backtrack = true;
+    byte next_coord = dfs_stack[stack_ptr];
+    if (stack_ptr > 0)
+      stack_ptr = stack_ptr - 1;
+
+    // Calculate direction to next coordinate
+    byte next_x = next_coord >> 4;
+    byte next_y = next_coord & 0x0F;
+
+    byte cur_x = getX();
+    byte cur_y = getY(); 
+
+    byte y_diff = next_y - cur_y;
+    byte x_diff = next_x - cur_x;
+
+
+    // Compute next heading
+    byte next_heading = 0;
+
+    if ( x_diff == 0 && y_diff == 255 )
+      next_heading = 0;
+    else if ( x_diff == 1 && y_diff == 0 )
+      next_heading = 1;
+    else if ( x_diff == 0 && y_diff == 1 )
+      next_heading = 2;
+    else if ( x_diff == 255 && y_diff == 0 )
+      next_heading = 3;
+
+    // Compute direction based on current heading
+    byte heading_diff = next_heading - heading;
+    heading_diff = (heading_diff + 40) % 4;
+
+    if (heading_diff == 0){ // Go straight 
+       Serial.println(x_diff);
+       Serial.println(y_diff);
+      return 0;
+    }
+    else if (heading_diff == 1) // Turn right
+      return 2;
+    else if (heading_diff == 3) // Turn left
+      return 1;
+    else if (heading_diff == 2) // Turn around
+      return 3;
+    return 99; // ONLY RUNS IF ERROR
+  }
+}
+
+// ============================== END DFS CODE ======================
 
 void Maze::printInfo() {
   Serial.println("Maze Info:");
@@ -387,6 +473,25 @@ void Maze::printInfo() {
     Serial.println("West");
   else
     Serial.println("ERROR! Heading was not in range [0-3]");
+
+  Serial.print("Stack pointer: ");
+  Serial.println(stack_ptr);
+  Serial.print("Current Stack Entry: ");
+  Serial.println(dfs_stack[stack_ptr]);
+  Serial.print("Last Stack Entry: ");
+  Serial.println(dfs_stack[stack_ptr - 1]);
+
+
+  Serial.println("Visited array: ");
+  Serial.println(visited[0]);
+  Serial.println(visited[1]);
+  Serial.println(visited[2]);
+  Serial.println(visited[3]);
+  Serial.println(visited[4]);
+  Serial.println(visited[5]);
+  Serial.println(visited[6]);
+  Serial.println(visited[7]);
+  Serial.println(visited[8]);
 
 
   /* Print ASCII Art Map */
@@ -428,15 +533,15 @@ void Maze::printInfo() {
   //  to_print = String(to_print + "|");
   //  Serial.println(to_print);
 
-  // Print raw walls values
-  Serial.print(" ");
-  for (byte x = 9; x < 18; x++) {
-    Serial.print(walls[x]);
-    Serial.print(" ");
-  }
-  Serial.println("");
-  for (byte x = 0; x < 9; x++) {
-    Serial.println(walls[x]);
-  }
+//  // Print raw walls values
+//  Serial.print(" ");
+//  for (byte x = 9; x < 18; x++) {
+//    Serial.print(walls[x]);
+//    Serial.print(" ");
+//  }
+//  Serial.println("");
+//  for (byte x = 0; x < 9; x++) {
+//    Serial.println(walls[x]);
+//  }
 
 }

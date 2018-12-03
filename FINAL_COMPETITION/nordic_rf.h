@@ -3,7 +3,7 @@
  * @version: 01
  * @course: ECE 3400, Fall 2018
  * @team: 21
- * BASE STATION CODE FOR FINAL COMPETITION
+ * CODE FOR FINAL COMPETITION
  */
 #include <SPI.h>
 #include <RF24.h>
