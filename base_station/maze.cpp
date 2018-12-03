@@ -298,6 +298,11 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
   char treas_char[50];
   String treas_string = processTreasureBits(treas_msb, treas_cb, treas_lsb);
   treas_string.toCharArray(treas_char, 50);
+
+  char robot_char[6];
+  String robot = robotPresent ? "true" : "false";
+  robotPresent = 0;
+  robot.toCharArray(robot_char, 6);
   
   char north_char[6];
   char south_char[6];
@@ -313,11 +318,15 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
   east.toCharArray(east_char, 6);
   char buffer[50];
   int n;
-  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,%s,robot=false", y, x, north_char, south_char, west_char, east_char, treas_char); //x y flipped b/c GUI takes row # first
+  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,%s,robot=%s", y, x, north_char, south_char, west_char, east_char, treas_char, robot_char); //x y flipped b/c GUI takes row # first
   for (int i = 0; i < n; i++) {
     Serial.print(buffer[i]);
   }
   Serial.println();
+}
+
+void Maze::robotDetected() {
+  robotPresent = 1;
 }
 
 String Maze::processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb) {

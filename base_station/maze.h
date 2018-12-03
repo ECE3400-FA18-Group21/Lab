@@ -14,6 +14,7 @@ class Maze {
   private:
     byte pos; //Robot position. First 4 bits are x coord, Second 4 bits are y coord
     byte heading; //Robot direction (can be 0-3)
+    bool robotPresent = 0; //1 if another robot is detected, 0 otherwise. For GUI. Need to set back to zero in the getGUIMessage() function
     short visited[9]; // Represents all visited nodes. Each entry in the array is a different
                      // Row (y coordinate) and the first 9 bits are whether the corresponding
                      // x coordinate on the grid was visited. Will have 9 entries, so whole
@@ -60,6 +61,11 @@ class Maze {
      */
     String processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb);
 
+    /*
+     * robotDetected() updates the robotPresent bool to 1.
+     */
+    void robotDetected();
+    
     /*
        printInfo() prints out the current maze representation state to the serial monitor
     */
