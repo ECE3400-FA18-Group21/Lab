@@ -34,15 +34,12 @@ bool right_wall;
 
 void setup() {
   Serial.begin(9600);
-  printf_begin();         //Leave this here
-  //pinMode(A0, OUTPUT);    //set pin as output to toggle LED --> IR circuit
-  //pinMode(8, OUTPUT);   //set pin as output to toggle LED --> microphone circuit
-  //pinMode(7, INPUT);      //set pin as input for pushbutton override switch
+  printf_begin();                           //Leave this here
   servo_R.attach(5);
   servo_L.attach(6);
   stopMotors(servo_L, servo_R);
   RF24_tx_setup(radio);
-  radio.printDetails(); //Leave this here
+  radio.printDetails();                     //Leave this here
 }
 
 void loop() {
@@ -50,7 +47,7 @@ void loop() {
     unsigned int * sensorStatus = checkSensorsDigital();
     stopMotors(servo_L, servo_R);
     bool microphone_detection = detect_660hz();
-    if (microphone_detection)
+    if(microphone_detection)
       MIC_COUNTER++;
     else
       MIC_COUNTER = 0;
@@ -62,7 +59,7 @@ void loop() {
     //Line tracking code
     unsigned int * sensorStatus = checkSensorsDigital();
     if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0)) { // Intersection Detected!
-      stopMotors(servo_L, servo_R);
+      //stopMotors(servo_L, servo_R);
       front_wall = detect_wall_6in(3);
       left_wall = detect_wall_6in(2);
       right_wall = detect_wall_6in(1);
@@ -71,28 +68,18 @@ void loop() {
       send_advance_intersection(radio, front_wall, left_wall, right_wall);
       
       byte next_command = maze.getNextCommand(front_wall, left_wall, right_wall);
-      //Serial.print(F("Next Command: "));
-      //Serial.println(next_command);
-      //maze.printInfo();
-      //Serial.print(F(" Wall Sensor Readings"));
-      //Serial.print(front_wall); Serial.print(F("   ")); Serial.print(left_wall); Serial.print(F("   ")); Serial.print(right_wall); Serial.println(F("   "));
-      
-
       if (next_command == 0){
         moveForward(servo_L, servo_R);
         delay(300);
-      }
-      else if (next_command == 1){
+      } else if (next_command == 1){
         turnLeftIntersection(servo_L, servo_R);
         maze.turnLeft();
         send_turn_left(radio);
-      }
-      else if (next_command == 2){
+      } else if (next_command == 2){
         turnRightIntersection(servo_L, servo_R);
         maze.turnRight();
         send_turn_right(radio);
-      }
-      else if (next_command == 3){
+      } else if (next_command == 3){
         send_turn_right(radio);
         turnRightIntersection(servo_L, servo_R);
 
@@ -101,22 +88,20 @@ void loop() {
         maze.turnRight();
         maze.turnRight(); 
         send_turn_right(radio);
-
       }
     }
     // Else just track the line
-    else if (sensorStatus[0] == 0) //turn Right
+    else if (sensorStatus[2] == 0) //turn Right
       adjustRight(servo_L, servo_R, 85);
-    else if (sensorStatus[2] == 0) //turn Left
+    else if (sensorStatus[0] == 0) //turn Left
       adjustLeft(servo_L, servo_R, 85);
     else {
       moveForward(servo_L, servo_R);
     }
-
     //IR Detection Code
-    while (detect_6080hz()) {
-      stopMotors(servo_L, servo_R);
-      send_robot_detected(radio);
-    }
+    //while (detect_6080hz()) {
+    //  stopMotors(servo_L, servo_R);
+    //  //send_robot_detected(radio);
+    //}
   }
 }

@@ -42,7 +42,7 @@ unsigned int * checkSensorsDigital() {
   sensorValuesDigital[1] = readQD(3);
   sensorValuesDigital[2] = readQD(4);
   
-  //Serial.print(sensorValuesDigital[0]); Serial.print("   "); Serial.print (sensorValuesDigital[1]); Serial.print("   "); Serial.println (sensorValuesDigital[2]);
+  Serial.print(sensorValuesDigital[0]); Serial.print("   "); Serial.print (sensorValuesDigital[1]); Serial.print("   "); Serial.println (sensorValuesDigital[2]);
   
   for (unsigned int i = 0; i < NUM_SENSORS_DIGITAL; i++) {
     if (sensorValuesDigital[i] < THRESHOLD_DIGITAL)

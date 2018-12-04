@@ -1,10 +1,10 @@
 /*
- * @date: 12.03.2018
- * @version: 01
- * @course: ECE 3400, Fall 2018
- * @team: 21
- * BASE STATION CODE FOR FINAL COMPETITION
- */
+   @date: 11.18.2018
+   @version: 01
+   @course: ECE 3400, Fall 2018
+   @team: 21
+   Base Station - Milestone 4
+*/
 #include "maze.h"
 
 /* Helper function for getting the Nth bit of a byte*/
@@ -230,7 +230,7 @@ byte Maze::getY() {
   return (pos & 0x0F);
 }
 
-void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool treas_lsb) {
+void Maze::getGUIMessage(byte x, byte y) {
   bool north_bool;
   bool south_bool;
   bool west_bool;
@@ -295,15 +295,6 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
       west_bool = (walls[y] & (0x1 << (x-1))) >> (x-1);
       east_bool = (walls[y] & (0x1 << x)) >> x;
   }
-  char treas_char[50];
-  String treas_string = processTreasureBits(treas_msb, treas_cb, treas_lsb);
-  treas_string.toCharArray(treas_char, 50);
-
-  char robot_char[6];
-  String robot = robotPresent ? "true" : "false";
-  robotPresent = 0;
-  robot.toCharArray(robot_char, 6);
-  
   char north_char[6];
   char south_char[6];
   char east_char[6];
@@ -318,66 +309,12 @@ void Maze::getGUIMessage(byte x, byte y, bool treas_msb, bool treas_cb, bool tre
   east.toCharArray(east_char, 6);
   char buffer[50];
   int n;
-  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,%s,robot=%s", y, x, north_char, south_char, west_char, east_char, treas_char, robot_char); //x y flipped b/c GUI takes row # first
+  n = sprintf(buffer, "%d,%d,north=%s,south=%s,west=%s,east=%s,robot=false", y, x, north_char, south_char, west_char, east_char); //x y flipped b/c GUI takes row # first
   for (int i = 0; i < n; i++) {
     Serial.print(buffer[i]);
   }
   Serial.println();
 }
-
-void Maze::robotDetected() {
-  robotPresent = 1;
-}
-
-String Maze::processTreasureBits(bool treas_msb, bool treas_cb, bool treas_lsb) {
-  byte treasure = (treas_msb << 2) | (treas_cb << 1) | treas_lsb;
-  char result_buf[] = "";
-  String tshape;
-  String tcolor;
-  switch(treasure) {
-    case 0: 
-      tshape = "None";
-      tcolor = "None";
-      break;
-    case 1:
-      tshape = "Triangle";
-      tcolor = "Red";
-      break;
-    case 2:
-      tshape = "Triangle";
-      tcolor = "Blue";
-      break;
-    case 3:
-      tshape = "Square";
-      tcolor = "Red";
-      break;
-    case 4:
-      tshape = "Square";
-      tcolor = "Blue";
-      break;
-    case 5:
-      tshape = "Diamond";
-      tcolor = "Red";
-      break;
-    case 6:
-      tshape = "Diamond";
-      tcolor = "Blue";
-      break;
-    case 7:
-      Serial.println("Invalid Treasure Command!");
-    default:
-      tshape = "None";
-      tcolor = "None";
-  }
-  char tshape_buf[20];
-  char tcolor_buf[20];
-  tshape.toCharArray(tshape_buf, 20);
-  tcolor.toCharArray(tcolor_buf, 20);
-  sprintf(result_buf, "tshape=%s,tcolor=%s", tshape_buf, tcolor_buf);
-  String result_str(result_buf);
-  return result_str;
-}
-
 
 void Maze::printInfo() {
   Serial.println("Maze Info:");
@@ -447,4 +384,5 @@ void Maze::printInfo() {
   for (byte x = 0; x < 9; x++) {
     Serial.println(walls[x]);
   }
+
 }
