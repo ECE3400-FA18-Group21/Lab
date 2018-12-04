@@ -77,7 +77,7 @@ byte RF24_rx_read(RF24 radio) {
   while ( radio.available(&pipe)) {            // Read pipe 1
     radio.read( &msg, 1 );
     //Serial.print(F("Loaded next response "));
-    //Serial.println(msg);
+    //Serial.println(msg, BIN);
   }
   return msg;
 }
