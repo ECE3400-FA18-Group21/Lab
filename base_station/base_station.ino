@@ -10,7 +10,7 @@
 #include <printf.h>
 #include <RF24.h>
 
-RF24 radio(7, 8);
+RF24 radio(7, 8); //CE, CSN
 
 Maze maze = Maze();
 

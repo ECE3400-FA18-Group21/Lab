@@ -6,7 +6,7 @@ GPIO
 4	 = Digital Line Sensor --> Left
 5	 = Left Servo
 6	 = Right Servo
-7        =
+7        = Pushbutton fail safe switch
 8        =
 9	 = Radio CE				
 10	 = Radio CSN 

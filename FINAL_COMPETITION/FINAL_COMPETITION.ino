@@ -34,9 +34,10 @@ bool right_wall;
 
 void setup() {
   Serial.begin(9600);
-  printf_begin();       //Leave this here
-  pinMode(7, OUTPUT);   //set pin as output to toggle LED --> IR circuit
-  pinMode(8, OUTPUT);   //set pin as output to toggle LED --> microphone circuit
+  printf_begin();         //Leave this here
+  //pinMode(7, OUTPUT);   //set pin as output to toggle LED --> IR circuit
+  //pinMode(8, OUTPUT);   //set pin as output to toggle LED --> microphone circuit
+  pinMode(7, INPUT);      //set pin as input for pushbutton override switch
   servo_R.attach(6);
   servo_L.attach(5);
   stopMotors(servo_L, servo_R);
@@ -49,23 +50,24 @@ void loop() {
     unsigned int * sensorStatus = checkSensorsDigital();
     stopMotors(servo_L, servo_R);
     bool microphone_detection = detect_660hz();
+    bool push_button = digitalRead(7);
     if (microphone_detection)
       MIC_COUNTER++;
     else
       MIC_COUNTER = 0;
-    if (MIC_COUNTER > MIC_THRESHOLD) {          //set this to a better threshold
-      digitalWrite(8, HIGH);
+    if ((MIC_COUNTER > MIC_THRESHOLD) || push_button) {          //set this to a better threshold
+      //digitalWrite(8, HIGH);
       BEGIN_OPERATIONS = true;
     }
-    else
-      digitalWrite(8, LOW);
+    //else
+      //digitalWrite(8, LOW);
   }
   while (BEGIN_OPERATIONS) {
     //Line tracking code
       
     unsigned int * sensorStatus = checkSensorsDigital();
     if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0)) { // Intersection Detected!
-      digitalWrite(7, HIGH);
+      //digitalWrite(7, HIGH);
       stopMotors(servo_L, servo_R);
       front_wall = detect_wall_6in(3);
       left_wall = detect_wall_6in(2);
@@ -80,7 +82,7 @@ void loop() {
       //maze.printInfo();
       //Serial.print(F(" Wall Sensor Readings"));
       //Serial.print(front_wall); Serial.print(F("   ")); Serial.print(left_wall); Serial.print(F("   ")); Serial.print(right_wall); Serial.println(F("   "));
-      digitalWrite(7, LOW);
+      //digitalWrite(7, LOW);
       
 
       if (next_command == 0){
@@ -98,7 +100,7 @@ void loop() {
         send_turn_right(radio);
       }
       else if (next_command == 3){
-        digitalWrite(7, HIGH);
+        //digitalWrite(7, HIGH);
         send_turn_right(radio);
         turnRightIntersection(servo_L, servo_R);
 
@@ -121,10 +123,10 @@ void loop() {
 
     //IR Detection Code
     while (detect_6080hz()) {
-      digitalWrite(7, HIGH);
+      //digitalWrite(7, HIGH);
       stopMotors(servo_L, servo_R);
       send_robot_detected(radio);
     }
-    digitalWrite(7, LOW);
+    //digitalWrite(7, LOW);
   }
 }
