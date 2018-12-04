@@ -1,0 +1,23 @@
+GPIO
+0	 = 
+1	 = 
+2	 = Digital Line Sensor --> Right
+3	 = Digital Line Sensor --> Middle
+4	 = Digital Line Sensor --> Left
+5	 = Left Servo
+6	 = Right Servo
+7        =
+8        =
+9	 = Radio CE				
+10	 = Radio CSN 
+11       = Radio MOSI
+12       = Radio MISO
+13       = Radio SCK
+
+ANALOG
+A0       = 
+A1       = IR Range Finder --> Right
+A2       = IR Range Finder --> Left
+A3       = IR Range Finder --> Front
+A4	 = IR Detection Circuit
+A5 	 = Microphone Detection Circuit
