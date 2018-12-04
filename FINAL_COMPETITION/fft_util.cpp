@@ -16,10 +16,10 @@ void fft_setup(int dev_select){
       TIMSK0 = 0;          // turn off timer0 for lower jitter - delay() and millis() killed
       if(dev_select==1){
         ADCSRA = 0xe7;     // set the adc to free running mode, set prescaler = 128 for microphone
-        ADMUX = 0x45;      // use adc5 for mic
+        ADMUX = 0x44;      // use adc5 for mic
       }else{
         ADCSRA = 0xe5;     // set the adc to free running mode, set prescaler = 32 for ir
-        ADMUX = 0x44;      // use adc4 for ir
+        ADMUX = 0x45;      // use adc4 for ir
       }
       DIDR0 = 0x01;        // turn off the digital input for adc0
 }
